@@ -1,2 +1,127 @@
-# Index.html
-Sorpresa 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>¡Sorpresa Especial!</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffe6e6; /* Color de fondo inicial */
+            overflow: hidden;
+            text-align: center;
+        }
+
+        /* --- PANTALLA 1 --- */
+        #pantalla-principal {
+            display: block;
+            z-index: 10;
+        }
+
+        h1 { font-size: 2.5rem; color: #d63384; margin-bottom: 20px; }
+
+        .botones {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        button {
+            padding: 15px 25px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            touch-action: manipulation;
+        }
+
+        #btn-si { background-color: #4caf50; color: white; position: relative; }
+        #btn-no { background-color: #ff4d4d; color: white; }
+
+        /* --- PANTALLA 2 (FIESTA) --- */
+        #pantalla-sorpresa {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            /* Fondo de fiesta con degradado y confeti visual */
+            background: radial-gradient(circle, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pastel { font-size: 100px; margin-bottom: 20px; animation: flotar 2s infinite ease-in-out; }
+
+        /* ESTE ES EL ÁREA DEL MENSAJE */
+        .mensaje-final {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #833ab4;
+            padding: 0 20px;
+            /* Efecto de escritura */
+            white-space: normal;
+            overflow: hidden;
+            border-right: 3px solid #833ab4;
+            display: inline-block;
+            animation: escribir 3.5s steps(40, end), parpadeo 0.7s infinite;
+        }
+
+        @keyframes flotar {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes escribir {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes parpadeo {
+            50% { border-color: transparent; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="pantalla-principal">
+        <h1>¿Quieres una sorpresa? 🎁</h1>
+        <div class="botones">
+            <button id="btn-si" onclick="mostrarSorpresa()">¡SÍ!</button>
+            <button id="btn-no" onclick="crecerSi()">No</button>
+        </div>
+    </div>
+
+    <div id="pantalla-sorpresa">
+        <div class="pastel">🎂</div>
+        
+        <div class="mensaje-final">
+            ¡Feliz día! Eres una persona súper especial ✨
+        </div>
+        <p style="font-size: 40px;">🥳🎉🎊</p>
+    </div>
+
+    <script>
+        let escalaSi = 1;
+
+        function crecerSi() {
+            escalaSi += 0.5;
+            document.getElementById('btn-si').style.transform = `scale(${escalaSi})`;
+        }
+
+        function mostrarSorpresa() {
+            document.getElementById('pantalla-principal').style.display = 'none';
+            document.getElementById('pantalla-sorpresa').style.display = 'flex';
+            // Cambiamos el color del fondo al entrar a la fiesta
+            document.body.style.backgroundColor = "#fecfef";
+        }
+    </script>
+
+</body>
+</html>

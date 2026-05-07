@@ -3,132 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Notas</title>
+    <title>Portal de Notas</title>
     <style>
-        :root { --pro-blue: #1f4e78; --pro-green: #375623; --dark: #121212; }
-        body { font-family: sans-serif; background: var(--dark); color: white; text-align: center; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: auto; background: #1e1e1e; padding: 20px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        h1 { color: #58a6ff; }
-        input, button { padding: 10px; margin: 5px; border-radius: 5px; border: none; }
-        button { cursor: pointer; background: var(--pro-blue); color: white; font-weight: bold; }
-        .admin-section { background: #2d2d2d; padding: 15px; margin-top: 20px; border-radius: 8px; display: none; }
+        :root { --pro-blue: #1f4e78; --pro-green: #375623; --dark: #121212; --danger: #8b0000; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--dark); color: white; text-align: center; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: #1e1e1e; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        h1 { color: #58a6ff; margin-bottom: 5px; }
+        .subtitle { color: #888; font-size: 0.9em; margin-bottom: 20px; }
+        input, button { padding: 12px; margin: 5px; border-radius: 6px; border: none; outline: none; font-size: 1em; }
+        input { background: #333; color: white; width: calc(100% - 30px); max-width: 200px; }
+        button { cursor: pointer; background: var(--pro-blue); color: white; font-weight: bold; transition: 0.3s; }
+        button:hover { filter: brightness(1.2); }
+        .btn-logout { background: #555; font-size: 0.8em; padding: 8px 15px; margin-top: 15px; display: none; }
+        .admin-section { background: #252525; padding: 20px; margin-top: 20px; border-radius: 8px; display: none; border-left: 4px solid var(--pro-green); }
+        .student-section { background: #252525; padding: 20px; margin-top: 20px; border-radius: 8px; display: none; border-left: 4px solid var(--pro-blue); }
+        
+        /* Stats Dashboard */
+        .stats-grid { display: flex; justify-content: center; gap: 20px; margin: 20px 0; }
+        .stat-box { background: #333; padding: 15px 25px; border-radius: 8px; min-width: 120px; }
+        .stat-box h2 { margin: 0; font-size: 2em; color: #58a6ff; }
+        .stat-box p { margin: 5px 0 0 0; color: #aaa; font-size: 0.9em; text-transform: uppercase; }
+        .status-aprobado { color: #4caf50 !important; }
+        .status-reprobado { color: #f44336 !important; }
+
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #444; padding: 10px; }
-        th { background: var(--pro-blue); }
-        .badge { padding: 5px 10px; border-radius: 15px; font-size: 0.8em; }
-        .admin-badge { background: var(--pro-green); }
-        .visitor-badge { background: #666; }
+        th, td { border-bottom: 1px solid #444; padding: 12px; text-align: center; }
+        th { background: #2a2a2a; color: #aaa; text-transform: uppercase; font-size: 0.8em; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>🐺 Notas</h1>
-    <div id="login-section">
-        <input type="password" id="passInput" placeholder="Introduce Clave">
-        <button onclick="login()">Entrar</button>
-    </div>
+    <p class="subtitle">Portal del Estudiante & Admin</p>
 
-    <div id="user-info" style="margin-top: 10px; display: none;">
-        <span id="role-tag" class="badge"></span>
-        <p id="welcome-msg"></p>
+    <div id="login-section">
+        <p>Ingresa tu código de acceso:</p>
+        <input type="password" id="passInput" placeholder="Ej: 0000 o 1276">
+        <button onclick="login()">Ingresar</button>
     </div>
 
     <div id="admin-panel" class="admin-section">
-        <h3>Subir Nueva Nota</h3>
-        <input type="text" id="stdName" placeholder="Nombre Estudiante">
-        <input type="number" id="stdGrade" placeholder="Nota (0-20)">
-        <button onclick="addGrade()" style="background: var(--pro-green);">Guardar Nota</button>
+        <h3 style="color: var(--pro-green);">Panel de Control (Admin)</h3>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+            <input type="text" id="stdCode" placeholder="Código Estudiante (Ej: 0000)">
+            <input type="text" id="stdName" placeholder="Nombre (Ej: Astro)">
+            <input type="number" id="stdGrade" placeholder="Nota (0-20)" min="0" max="20">
+            <button onclick="addGrade()" style="background: var(--pro-green);">Añadir Nota</button>
+        </div>
+        
+        <h4 style="margin-top: 30px; text-align: left;">Vista Global de Estudiantes</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Notas Históricas</th>
+                    <th>Promedio</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody id="admin-table"></tbody>
+        </table>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Estudiante</th>
-                <th>Nota</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody id="grade-table">
-            </tbody>
-    </table>
+    <div id="student-panel" class="student-section">
+        <h2 id="st-welcome">Bienvenido</h2>
+        
+        <div class="stats-grid">
+            <div class="stat-box">
+                <h2 id="st-average">0.0</h2>
+                <p>Promedio Final</p>
+            </div>
+            <div class="stat-box">
+                <h2 id="st-status">-</h2>
+                <p>Estado</p>
+            </div>
+        </div>
+
+        <h4 style="text-align: left;">Historial de Notas Acumuladas</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Evaluación</th>
+                    <th>Calificación</th>
+                </tr>
+            </thead>
+            <tbody id="student-grades"></tbody>
+        </table>
+    </div>
+
+    <button class="btn-logout" id="btnLogout" onclick="logout()">Cerrar Sesión</button>
 </div>
 
 <script>
-    let isAdmin = false;
+    // Estructura de datos simulada en LocalStorage: 
+    // { "0000": { name: "Estudiante Uno", grades: [] } }
 
-    // 1. Lógica de Acceso
+    function getDB() {
+        const data = localStorage.getItem('lobo_db');
+        return data ? JSON.parse(data) : {};
+    }
+
+    function saveDB(db) {
+        localStorage.setItem('lobo_db', JSON.stringify(db));
+    }
+
+    // Calcula el promedio de un array de notas
+    function calculateAverage(gradesArray) {
+        if (!gradesArray || gradesArray.length === 0) return 0;
+        const sum = gradesArray.reduce((a, b) => a + b, 0);
+        return (sum / gradesArray.length).toFixed(1); // 1 decimal
+    }
+
+    // Lógica de Acceso
     function login() {
         const pass = document.getElementById('passInput').value;
-        const loginSection = document.getElementById('login-section');
-        const userInfo = document.getElementById('user-info');
-        const roleTag = document.getElementById('role-tag');
-        const welcomeMsg = document.getElementById('welcome-msg');
+        if (!pass) return;
+
+        document.getElementById('login-section').style.display = "none";
+        document.getElementById('btnLogout').style.display = "inline-block";
 
         if (pass === "1276") {
-            isAdmin = true;
+            // Entra el Profe
             document.getElementById('admin-panel').style.display = "block";
-            roleTag.innerText = "ADMIN";
-            roleTag.className = "badge admin-badge";
-            welcomeMsg.innerText = "Bienvenido, Astro1276. Tienes permisos de edición.";
+            renderAdminView();
         } else {
-            isAdmin = false;
-            roleTag.innerText = "VISITANTE";
-            roleTag.className = "badge visitor-badge";
-            welcomeMsg.innerText = "Perfil de solo lectura.";
+            // Entra un Estudiante
+            const db = getDB();
+            if (db[pass]) {
+                document.getElementById('student-panel').style.display = "block";
+                renderStudentView(pass, db[pass]);
+            } else {
+                alert("Código no encontrado. Habla con el Profe.");
+                logout();
+            }
         }
-
-        loginSection.style.display = "none";
-        userInfo.style.display = "block";
-        renderTable();
     }
 
-    // 2. Cargar datos de LocalStorage
-    function getGrades() {
-        const data = localStorage.getItem('lobo_grades');
-        return data ? JSON.parse(data) : [];
-    }
-
-    // 3. Añadir Nota (Solo Admin)
+    // Lógica para guardar la nota
     function addGrade() {
-        const name = document.getElementById('stdName').value;
-        const grade = document.getElementById('stdGrade').value;
+        const code = document.getElementById('stdCode').value.trim();
+        const name = document.getElementById('stdName').value.trim();
+        const gradeStr = document.getElementById('stdGrade').value;
+        const grade = parseFloat(gradeStr);
 
-        if (name && grade) {
-            const grades = getGrades();
-            grades.push({ name, grade: parseFloat(grade) });
-            localStorage.setItem('lobo_grades', JSON.stringify(grades));
-            
-            // Limpiar inputs
-            document.getElementById('stdName').value = "";
-            document.getElementById('stdGrade').value = "";
-            renderTable();
+        if (!code || !name || isNaN(grade)) {
+            alert("Profe, llena todos los campos correctamente.");
+            return;
+        }
+
+        const db = getDB();
+        
+        // Si el estudiante no existe, lo creamos
+        if (!db[code]) {
+            db[code] = { name: name, grades: [] };
         } else {
-            alert("Llena todos los campos, Profe.");
+            // Actualizamos el nombre por si el profe lo escribió distinto
+            db[code].name = name; 
+        }
+
+        // Añadimos la nueva nota al historial
+        db[code].grades.push(grade);
+        
+        saveDB(db);
+        
+        // Limpiamos los inputs de notas
+        document.getElementById('stdGrade').value = "";
+        renderAdminView(); // Actualizamos la tabla
+    }
+
+    // Renderiza la vista del Profe (Todos los estudiantes)
+    function renderAdminView() {
+        const db = getDB();
+        const tbody = document.getElementById('admin-table');
+        tbody.innerHTML = "";
+
+        for (const code in db) {
+            const student = db[code];
+            const avg = calculateAverage(student.grades);
+            const status = avg >= 10 ? "✅ Aprobado" : "❌ Reprobado";
+            const colorClass = avg >= 10 ? "status-aprobado" : "status-reprobado";
+
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>${code}</strong></td>
+                    <td>${student.name}</td>
+                    <td>${student.grades.join(" | ")}</td>
+                    <td><strong>${avg}</strong></td>
+                    <td class="${colorClass}">${status}</td>
+                </tr>
+            `;
         }
     }
 
-    // 4. Dibujar la tabla
-    function renderTable() {
-        const grades = getGrades();
-        const tableBody = document.getElementById('grade-table');
-        tableBody.innerHTML = "";
+    // Renderiza la vista privada del Estudiante
+    function renderStudentView(code, studentData) {
+        document.getElementById('st-welcome').innerText = `Hola, ${studentData.name}`;
+        
+        const avg = calculateAverage(studentData.grades);
+        const avgEl = document.getElementById('st-average');
+        const statusEl = document.getElementById('st-status');
+        
+        avgEl.innerText = avg;
+        
+        if (avg >= 10) {
+            statusEl.innerText = "APROBADO";
+            statusEl.className = "status-aprobado";
+            avgEl.className = "status-aprobado";
+        } else {
+            statusEl.innerText = "REPROBADO";
+            statusEl.className = "status-reprobado";
+            avgEl.className = "status-reprobado";
+        }
 
-        grades.forEach(item => {
-            const status = item.grade >= 10 ? "✅ Aprobado" : "❌ Reprobado";
-            tableBody.innerHTML += `
+        const tbody = document.getElementById('student-grades');
+        tbody.innerHTML = "";
+        
+        studentData.grades.forEach((nota, index) => {
+            tbody.innerHTML += `
                 <tr>
-                    <td>${item.name}</td>
-                    <td>${item.grade}</td>
-                    <td>${status}</td>
+                    <td>Evaluación ${index + 1}</td>
+                    <td><strong>${nota}</strong></td>
                 </tr>
             `;
         });
     }
 
-    // Cargar tabla al inicio si ya hay datos
-    renderTable();
+    // Volver al Login
+    function logout() {
+        document.getElementById('passInput').value = "";
+        document.getElementById('login-section').style.display = "block";
+        document.getElementById('admin-panel').style.display = "none";
+        document.getElementById('student-panel').style.display = "none";
+        document.getElementById('btnLogout').style.display = "none";
+    }
 </script>
 
 </body>
-</html>
+    </html>
+    

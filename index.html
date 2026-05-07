@@ -2,185 +2,133 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>¡Sorpresa Especial!</title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Notas</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #E6E6FA; 
-            overflow: hidden;
-            text-align: center;
-        }
-
-        /* --- PANTALLA 1 --- */
-        #pantalla-principal { display: block; z-index: 10; }
-        h1 { font-size: 2.5rem; color: #d63384; margin-bottom: 20px; }
-        .botones { display: flex; justify-content: center; align-items: center; gap: 15px; }
-        button { padding: 15px 25px; font-size: 1.2rem; border: none; border-radius: 50px; cursor: pointer; transition: transform 0.2s; touch-action: manipulation; }
-        #btn-si { background-color: #4caf50; color: white; position: relative; }
-        #btn-no { background-color: #ff4d4d; color: white; }
-
-        /* --- PANTALLA 2 --- */
-        #pantalla-sorpresa {
-            display: none;
-            width: 100%;
-            height: 100vh;
-            background: radial-gradient(circle, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* La caja de regalo */
-        #caja-regalo {
-            font-size: 100px;
-            cursor: pointer;
-            transition: transform 0.3s;
-            animation: vibrar 1s infinite;
-        }
-        #caja-regalo:hover { transform: scale(1.1); }
-
-        .aviso { color: red; font-weight: bold; font-size: 1.5rem; margin-bottom: 10px; text-transform: uppercase; }
-
-        /* El reloj */
-        #contador {
-            display: none;
-            font-size: 80px;
-            color: #d63384;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-
-        /* Contenido oculto hasta que explote */
-        #contenido-final { display: none; flex-direction: column; align-items: center; }
-
-        .pastel { font-size: 100px; margin-bottom: 20px; animation: flotar 2s infinite ease-in-out; }
-
-        .mensaje-final {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #833ab4;
-            padding: 0 20px;
-            border-right: 3px solid #833ab4;
-            animation: parpadeo 0.7s infinite;
-        }
-
-        @keyframes vibrar {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(5deg); }
-            75% { transform: rotate(-5deg); }
-        }
-
-        @keyframes flotar {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        @keyframes parpadeo { 50% { border-color: transparent; } }
+        :root { --pro-blue: #1f4e78; --pro-green: #375623; --dark: #121212; }
+        body { font-family: sans-serif; background: var(--dark); color: white; text-align: center; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: #1e1e1e; padding: 20px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        h1 { color: #58a6ff; }
+        input, button { padding: 10px; margin: 5px; border-radius: 5px; border: none; }
+        button { cursor: pointer; background: var(--pro-blue); color: white; font-weight: bold; }
+        .admin-section { background: #2d2d2d; padding: 15px; margin-top: 20px; border-radius: 8px; display: none; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #444; padding: 10px; }
+        th { background: var(--pro-blue); }
+        .badge { padding: 5px 10px; border-radius: 15px; font-size: 0.8em; }
+        .admin-badge { background: var(--pro-green); }
+        .visitor-badge { background: #666; }
     </style>
 </head>
 <body>
 
-    <div id="pantalla-principal">
-        <h1>¿Quieres una sorpresa? 🎁</h1>
-        <div class="botones">
-            <button id="btn-si" onclick="mostrarSorpresa()">¡SÍ!</button>
-            <button id="btn-no" onclick="crecerSi()">No</button>
-        </div>
+<div class="container">
+    <h1>🐺 Notas</h1>
+    <div id="login-section">
+        <input type="password" id="passInput" placeholder="Introduce Clave">
+        <button onclick="login()">Entrar</button>
     </div>
 
-    <div id="pantalla-sorpresa">
-        <div id="seccion-bomba">
-            <div class="aviso">⚠️ ¡NO ABRIR! ⚠️</div>
-            <div id="caja-regalo" onclick="iniciarCuentaRegresiva()">🎁</div>
-            <div id="contador">10</div>
-        </div>
-
-        <div id="contenido-final">
-            <div class="pastel">🎂</div>
-            <div class="mensaje-final">
-                ¡Feliz cumpleaños niña cali! ✨ <br>
-                <small style="font-size: 1rem;">poquito adelantado pero seguro</small>
-            </div>
-            <p style="font-size: 40px;">🥳🎉🎊</p>
-        </div>
+    <div id="user-info" style="margin-top: 10px; display: none;">
+        <span id="role-tag" class="badge"></span>
+        <p id="welcome-msg"></p>
     </div>
 
-    <script>
-        let escalaSi = 1;
+    <div id="admin-panel" class="admin-section">
+        <h3>Subir Nueva Nota</h3>
+        <input type="text" id="stdName" placeholder="Nombre Estudiante">
+        <input type="number" id="stdGrade" placeholder="Nota (0-20)">
+        <button onclick="addGrade()" style="background: var(--pro-green);">Guardar Nota</button>
+    </div>
 
-        function crecerSi() {
-            escalaSi += 0.5;
-            document.getElementById('btn-si').style.transform = `scale(${escalaSi})`;
+    <table>
+        <thead>
+            <tr>
+                <th>Estudiante</th>
+                <th>Nota</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody id="grade-table">
+            </tbody>
+    </table>
+</div>
+
+<script>
+    let isAdmin = false;
+
+    // 1. Lógica de Acceso
+    function login() {
+        const pass = document.getElementById('passInput').value;
+        const loginSection = document.getElementById('login-section');
+        const userInfo = document.getElementById('user-info');
+        const roleTag = document.getElementById('role-tag');
+        const welcomeMsg = document.getElementById('welcome-msg');
+
+        if (pass === "1276") {
+            isAdmin = true;
+            document.getElementById('admin-panel').style.display = "block";
+            roleTag.innerText = "ADMIN";
+            roleTag.className = "badge admin-badge";
+            welcomeMsg.innerText = "Bienvenido, Astro1276. Tienes permisos de edición.";
+        } else {
+            isAdmin = false;
+            roleTag.innerText = "VISITANTE";
+            roleTag.className = "badge visitor-badge";
+            welcomeMsg.innerText = "Perfil de solo lectura.";
         }
 
-        function mostrarSorpresa() {
-            document.getElementById('pantalla-principal').style.display = 'none';
-            document.getElementById('pantalla-sorpresa').style.display = 'flex';
-        }
+        loginSection.style.display = "none";
+        userInfo.style.display = "block";
+        renderTable();
+    }
 
-        function iniciarCuentaRegresiva() {
-            const caja = document.getElementById('caja-regalo');
-            const reloj = document.getElementById('contador');
-            const aviso = document.querySelector('.aviso');
+    // 2. Cargar datos de LocalStorage
+    function getGrades() {
+        const data = localStorage.getItem('lobo_grades');
+        return data ? JSON.parse(data) : [];
+    }
+
+    // 3. Añadir Nota (Solo Admin)
+    function addGrade() {
+        const name = document.getElementById('stdName').value;
+        const grade = document.getElementById('stdGrade').value;
+
+        if (name && grade) {
+            const grades = getGrades();
+            grades.push({ name, grade: parseFloat(grade) });
+            localStorage.setItem('lobo_grades', JSON.stringify(grades));
             
-            // Cambiamos el regalo por algo más "peligroso"
-            caja.innerHTML = "📦";
-            caja.style.animation = "vibrar 0.2s infinite"; // Vibra más rápido
-            reloj.style.display = "block";
-            aviso.innerText = "¡¿QUÉ HICISTE?! 😱";
-
-            let tiempo = 10;
-            let intervalo = setInterval(() => {
-                tiempo--;
-                reloj.innerText = tiempo;
-
-                if (tiempo <= 0) {
-                    clearInterval(intervalo);
-                    explotar();
-                }
-            }, 1000);
+            // Limpiar inputs
+            document.getElementById('stdName').value = "";
+            document.getElementById('stdGrade').value = "";
+            renderTable();
+        } else {
+            alert("Llena todos los campos, Profe.");
         }
+    }
 
-        function explotar() {
-            // Ocultamos la caja y el reloj
-            document.getElementById('seccion-bomba').style.display = "none";
-            
-            // Mostramos el mensaje final
-            document.getElementById('contenido-final').style.display = "flex";
-            document.body.style.backgroundColor = "#ff00ff"; // Flash de color
+    // 4. Dibujar la tabla
+    function renderTable() {
+        const grades = getGrades();
+        const tableBody = document.getElementById('grade-table');
+        tableBody.innerHTML = "";
 
-            // EXPLOSIÓN DE CONFETI REAL
-            var end = Date.now() + (3 * 1000); // 3 segundos de confeti
+        grades.forEach(item => {
+            const status = item.grade >= 10 ? "✅ Aprobado" : "❌ Reprobado";
+            tableBody.innerHTML += `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.grade}</td>
+                    <td>${status}</td>
+                </tr>
+            `;
+        });
+    }
 
-            (function frame() {
-              confetti({
-                particleCount: 10,
-                angle: 60,
-                spread: 55,
-                origin: { x: 0 },
-                colors: ['#ff0000', '#00ff00', '#0000ff']
-              });
-              confetti({
-                particleCount: 10,
-                angle: 120,
-                spread: 55,
-                origin: { x: 1 },
-                colors: ['#ff0000', '#00ff00', '#0000ff']
-              });
-
-              if (Date.now() < end) {
-                requestAnimationFrame(frame);
-              }
-            }());
-        }
-    </script>
+    // Cargar tabla al inicio si ya hay datos
+    renderTable();
+</script>
 
 </body>
 </html>

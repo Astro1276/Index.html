@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Notas </title>
+    <title>Portal de Notas - Lobo Academy</title>
     <style>
         :root { --pro-blue: #1f4e78; --pro-green: #375623; --dark: #121212; --danger: #cc0000; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--dark); color: white; text-align: center; margin: 0; padding: 20px; }
@@ -110,10 +110,10 @@
 <script>
     const SUPABASE_URL = 'https://eoekazccgrggqzyzaktq.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_v4A0ZIxfyQ8EeYl7Wio74Q_AiaWPuFh';
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function getDB() {
-        const { data, error } = await supabase.from('students').select('*');
+        const { data, error } = await _supabase.from('students').select('*');
         if (error) return {};
         const db = {};
         data.forEach(student => {
@@ -126,7 +126,7 @@
     }
 
     async function saveStudent(code, name, grades) {
-        await supabase.from('students').upsert([{ code, name, grades }], { onConflict: 'code' });
+        await _supabase.from('students').upsert([{ code, name, grades }], { onConflict: 'code' });
     }
 
     function calculateAverage(gradesArray) {
@@ -161,19 +161,21 @@
     async function login() {
         const pass = document.getElementById('passInput').value;
         if (!pass) return;
-        document.getElementById('login-section').style.display = "none";
-        document.getElementById('btnLogout').style.display = "inline-block";
+        
         if (pass === "1276") {
+            document.getElementById('login-section').style.display = "none";
+            document.getElementById('btnLogout').style.display = "inline-block";
             document.getElementById('admin-panel').style.display = "block";
             await renderAdminView();
         } else {
             const db = await getDB();
             if (db[pass]) {
+                document.getElementById('login-section').style.display = "none";
+                document.getElementById('btnLogout').style.display = "inline-block";
                 document.getElementById('student-panel').style.display = "block";
                 renderStudentView(pass, db[pass]);
             } else {
-                alert("Código no encontrado. ¿Hiciste la tarea, bro?");
-                logout();
+                alert("Código no encontrado.");
             }
         }
     }
@@ -183,7 +185,7 @@
         const name = document.getElementById('stdName').value.trim();
         const grade = parseFloat(document.getElementById('stdGrade').value);
         if (!code || !name || isNaN(grade) || grade < 0 || grade > 20) {
-            alert("Verifica los datos. La nota debe ser de 0 a 20.");
+            alert("Datos incorrectos.");
             return;
         }
         const db = await getDB();
@@ -195,8 +197,8 @@
     }
 
     async function deleteLastGrade(code) {
-        if (confirm(`¿Borrar la última nota del estudiante ${code}?`)) {
-            const { data, error } = await supabase.from('students').select('*').eq('code', code).single();
+        if (confirm(`¿Borrar última nota de ${code}?`)) {
+            const { data, error } = await _supabase.from('students').select('*').eq('code', code).single();
             if (error) return;
             const grades = data.grades;
             grades.pop();
@@ -227,19 +229,15 @@
         const msgEl = document.getElementById('st-message');
         avgEl.innerText = avg;
         if (studentData.grades.length === 0) {
-            msgEl.innerText = "Aún no tienes notas.";
-            msgEl.style.color = "#aaa";
+            msgEl.innerText = "Sin notas.";
         } else if (avg >= 18) {
             msgEl.innerText = "🔥 ¡Nivel Dios!";
             msgEl.style.color = "#ffeb3b";
-        } else if (avg >= 14) {
-            msgEl.innerText = "🚀 ¡Vas excelente!";
-            msgEl.style.color = "#4caf50";
         } else if (avg >= 10) {
-            msgEl.innerText = "⚠️ Aprobado, pero al límite.";
-            msgEl.style.color = "#ff9800";
+            msgEl.innerText = "🚀 Aprobado.";
+            msgEl.style.color = "#4caf50";
         } else {
-            msgEl.innerText = "💀 Un bug en la matrix.";
+            msgEl.innerText = "💀 Bug en la matrix.";
             msgEl.style.color = "#f44336";
         }
         statusEl.innerText = avg >= 10 ? "APROBADO" : "REPROBADO";
@@ -253,12 +251,7 @@
     }
 
     function logout() {
-        document.getElementById('passInput').value = "";
-        document.getElementById('login-section').style.display = "block";
-        document.getElementById('admin-panel').style.display = "none";
-        document.getElementById('student-panel').style.display = "none";
-        document.getElementById('btnLogout').style.display = "none";
-        renderTopBoard();
+        location.reload();
     }
 
     async function initApp() {

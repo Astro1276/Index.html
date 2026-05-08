@@ -5,25 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal de Notas</title>
     <style>
-        /* Tus estilos originales aquí... */
+        
     </style>
-    <!-- Incluye Supabase CDN -->
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"></script>
 </head>
 <body onload="initApp()">
 
 <div class="container">
-    <!-- ...Tu HTML original (sin cambios)... -->
+    
 </div>
 
 <script>
-    const SUPABASE_URL = 'AQUÍ_PEGA_TU_URL';
-    const SUPABASE_KEY = 'AQUÍ_PEGA_TU_ANON_KEY';
+    const SUPABASE_URL = 'https://eoekazccgrggqzyzaktq.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_v4A0ZIxfyQ8EeYl7Wio74Q_AiaWPuFh';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    // La tabla se asume llamada 'students' con columnas: code (PK), name, grades (array float8[])
-    // Puedes ajustar nombres en las funciones si tu tabla/nombres difieren.
-
+    
     // ============= 2. FUNCIONES DB =============
     async function getDB() {
         const { data, error } = await supabase.from('students').select('*');

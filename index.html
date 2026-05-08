@@ -33,6 +33,7 @@
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border-bottom: 1px solid #444; padding: 12px; text-align: center; }
         th { background: #2a2a2a; color: #aaa; text-transform: uppercase; font-size: 0.8em; }
+        .pass-change { margin-top: 20px; padding-top: 20px; border-top: 1px solid #444; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -43,12 +44,13 @@
     <p class="subtitle">Portal del Estudiante & Admin</p>
 
     <div id="login-section">
-        <p>Ingresa tu código de acceso:</p>
-        <input type="password" id="passInput" placeholder="Clave">
+        <p>Ingresa tu código e identificación:</p>
+        <input type="text" id="userInput" placeholder="Código (ID)">
+        <input type="password" id="passInput" placeholder="Contraseña">
         <button onclick="login()">Ingresar</button>
 
         <div class="top-board">
-            <h3>🏆 Top Lobos (Mejores Promedios)</h3>
+            <h3>🏆 Top Lobos</h3>
             <ul class="top-list" id="top-students-list"></ul>
         </div>
     </div>
@@ -56,12 +58,11 @@
     <div id="admin-panel" class="admin-section">
         <h3 style="color: var(--pro-green);">Panel de Control (Admin)</h3>
         <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
-            <input type="text" id="stdCode" placeholder="Código (Ej: 0000)">
-            <input type="text" id="stdName" placeholder="Nombre (Ej: Astro)">
-            <input type="number" id="stdGrade" placeholder="Nota (0-20)" min="0" max="20">
+            <input type="text" id="stdCode" placeholder="Código">
+            <input type="text" id="stdName" placeholder="Nombre">
+            <input type="number" id="stdGrade" placeholder="Nota" min="0" max="20">
             <button onclick="addGrade()" style="background: var(--pro-green);">Añadir Nota</button>
         </div>
-        <h4 style="margin-top: 30px; text-align: left;">Vista Global de Estudiantes</h4>
         <div style="overflow-x: auto;">
             <table>
                 <thead>
@@ -85,178 +86,177 @@
         <div class="stats-grid">
             <div class="stat-box">
                 <h2 id="st-average">0.0</h2>
-                <p>Promedio Final</p>
+                <p>Promedio</p>
             </div>
             <div class="stat-box">
                 <h2 id="st-status">-</h2>
                 <p>Estado</p>
             </div>
         </div>
-        <h4 style="text-align: left;">Historial de Notas</h4>
         <table>
             <thead>
-                <tr>
-                    <th>Evaluación</th>
-                    <th>Calificación</th>
-                </tr>
+                <tr><th>Evaluación</th><th>Nota</th></tr>
             </thead>
             <tbody id="student-grades"></tbody>
         </table>
+        
+        <div class="pass-change">
+            <h4>Seguridad</h4>
+            <input type="password" id="newPass" placeholder="Nueva Contraseña">
+            <button onclick="changePassword()">Actualizar Clave</button>
+        </div>
     </div>
 
     <button class="btn-logout" id="btnLogout" onclick="logout()">Cerrar Sesión</button>
 </div>
 
 <script>
-    const SUPABASE_URL = 'https://eoekazccgrggqzyzaktq.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_v4A0ZIxfyQ8EeYl7Wio74Q_AiaWPuFh';
+    const SUPABASE_URL = 'https://zipgkvvyugyisxssbmku.supabase.co/rest/v1/';
+    const SUPABASE_KEY = 'sb_publishable_X1lQYk4ghFJtbEanKICWsg_oYj6Eu19';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    let currentUserCode = null;
 
     async function getDB() {
-        const { data, error } = await _supabase.from('students').select('*');
+        const { data, error } = await _supabase.from('diccionario').select('*');
         if (error) return {};
         const db = {};
-        data.forEach(student => {
-            db[student.code] = {
-                name: student.name,
-                grades: student.grades || []
-            };
+        data.forEach(s => {
+            db[s.code] = { name: s.name, grades: s.grades || [], password: s.password || "0000" };
         });
         return db;
     }
 
-    async function saveStudent(code, name, grades) {
-        await _supabase.from('students').upsert([{ code, name, grades }], { onConflict: 'code' });
-    }
-
-    function calculateAverage(gradesArray) {
-        if (!gradesArray || gradesArray.length === 0) return 0;
-        const sum = gradesArray.reduce((a, b) => a + b, 0);
-        return parseFloat((sum / gradesArray.length).toFixed(1));
+    function calculateAverage(grades) {
+        if (!grades || grades.length === 0) return 0;
+        return parseFloat((grades.reduce((a, b) => a + b, 0) / grades.length).toFixed(1));
     }
 
     async function renderTopBoard() {
         const db = await getDB();
         const listEl = document.getElementById('top-students-list');
         listEl.innerHTML = "";
-        let studentsArray = [];
-        for (const code in db) {
-            const avg = calculateAverage(db[code].grades);
-            if (db[code].grades.length > 0) {
-                studentsArray.push({ code: code, avg: avg });
-            }
+        let arr = [];
+        for (const c in db) {
+            let avg = calculateAverage(db[c].grades);
+            if (db[c].grades.length > 0) arr.push({ code: c, avg: avg });
         }
-        studentsArray.sort((a, b) => b.avg - a.avg);
-        const top3 = studentsArray.slice(0, 3);
-        const medallas = ["🥇", "🥈", "🥉"];
-        if (top3.length === 0) {
-            listEl.innerHTML = "<li>Aún no hay notas registradas.</li>";
+        arr.sort((a, b) => b.avg - a.avg);
+        const medals = ["🥇", "🥈", "🥉"];
+        if (arr.length === 0) {
+            listEl.innerHTML = "<li>Sin registros</li>";
             return;
         }
-        top3.forEach((std, index) => {
-            listEl.innerHTML += `<li>${medallas[index]} ID: <span>${std.code}</span> (Prom: ${std.avg})</li>`;
+        arr.slice(0, 3).forEach((s, i) => {
+            listEl.innerHTML += `<li>${medals[i]} ID: <span>${s.code}</span> (Prom: ${s.avg})</li>`;
         });
     }
 
     async function login() {
+        const user = document.getElementById('userInput').value.trim();
         const pass = document.getElementById('passInput').value;
-        if (!pass) return;
-        
-        if (pass === "1276") {
-            document.getElementById('login-section').style.display = "none";
-            document.getElementById('btnLogout').style.display = "inline-block";
-            document.getElementById('admin-panel').style.display = "block";
+        if (!user || !pass) return;
+
+        if (user === "admin" && pass === "1276") {
+            showPanel('admin-panel');
             await renderAdminView();
         } else {
             const db = await getDB();
-            if (db[pass]) {
-                document.getElementById('login-section').style.display = "none";
-                document.getElementById('btnLogout').style.display = "inline-block";
-                document.getElementById('student-panel').style.display = "block";
-                renderStudentView(pass, db[pass]);
+            const student = db[user];
+            if (student && student.password === pass) {
+                currentUserCode = user;
+                showPanel('student-panel');
+                renderStudentView(user, student);
             } else {
-                alert("Código no encontrado.");
+                alert("Credenciales incorrectas");
             }
         }
+    }
+
+    function showPanel(id) {
+        document.getElementById('login-section').style.display = "none";
+        document.getElementById('btnLogout').style.display = "inline-block";
+        document.getElementById(id).style.display = "block";
     }
 
     async function addGrade() {
         const code = document.getElementById('stdCode').value.trim();
         const name = document.getElementById('stdName').value.trim();
         const grade = parseFloat(document.getElementById('stdGrade').value);
-        if (!code || !name || isNaN(grade) || grade < 0 || grade > 20) {
-            alert("Datos incorrectos.");
-            return;
-        }
+        if (!code || !name || isNaN(grade)) return;
+
         const db = await getDB();
-        let grades = db[code] ? db[code].grades : [];
-        grades.push(grade);
-        await saveStudent(code, name, grades);
+        let currentGrades = db[code] ? db[code].grades : [];
+        let currentPass = db[code] ? db[code].password : "0000";
+        currentGrades.push(grade);
+
+        await _supabase.from('diccionario').upsert({ 
+            code: code, name: name, grades: currentGrades, password: currentPass 
+        }, { onConflict: 'code' });
+
         document.getElementById('stdGrade').value = "";
         await renderAdminView();
+        await renderTopBoard();
+    }
+
+    async function changePassword() {
+        const newPass = document.getElementById('newPass').value;
+        if (newPass.length < 4) {
+            alert("Mínimo 4 caracteres");
+            return;
+        }
+        const { error } = await _supabase.from('diccionario')
+            .update({ password: newPass })
+            .eq('code', currentUserCode);
+        
+        if (!error) {
+            alert("Contraseña actualizada");
+            document.getElementById('newPass').value = "";
+        }
     }
 
     async function deleteLastGrade(code) {
-        if (confirm(`¿Borrar última nota de ${code}?`)) {
-            const { data, error } = await _supabase.from('students').select('*').eq('code', code).single();
-            if (error) return;
-            const grades = data.grades;
-            grades.pop();
-            await saveStudent(code, data.name, grades);
-            await renderAdminView();
-        }
+        if (!confirm("¿Borrar última nota?")) return;
+        const db = await getDB();
+        let g = db[code].grades;
+        g.pop();
+        await _supabase.from('diccionario').update({ grades: g }).eq('code', code);
+        await renderAdminView();
+        await renderTopBoard();
     }
 
     async function renderAdminView() {
         const db = await getDB();
         const tbody = document.getElementById('admin-table');
         tbody.innerHTML = "";
-        for (const code in db) {
-            const student = db[code];
-            const avg = calculateAverage(student.grades);
-            const status = avg >= 10 ? "✅ Aprobado" : "❌ Reprobado";
-            const colorClass = avg >= 10 ? "status-aprobado" : "status-reprobado";
-            const deleteBtn = student.grades.length > 0 ? `<button class="btn-delete" onclick="deleteLastGrade('${code}')">Deshacer</button>` : `-`;
-            tbody.innerHTML += `<tr><td><strong>${code}</strong></td><td>${student.name}</td><td>${student.grades.join(" | ")}</td><td><strong>${avg}</strong></td><td class="${colorClass}">${status}</td><td>${deleteBtn}</td></tr>`;
+        for (const c in db) {
+            const s = db[c];
+            const avg = calculateAverage(s.grades);
+            const cl = avg >= 10 ? "status-aprobado" : "status-reprobado";
+            tbody.innerHTML += `<tr>
+                <td>${c}</td><td>${s.name}</td><td>${s.grades.join("|")}</td>
+                <td>${avg}</td><td class="${cl}">${avg >= 10 ? "Aprobado" : "Reprobado"}</td>
+                <td><button class="btn-delete" onclick="deleteLastGrade('${c}')">Deshacer</button></td>
+            </tr>`;
         }
     }
 
-    function renderStudentView(code, studentData) {
-        document.getElementById('st-welcome').innerText = `Hola, ${studentData.name}`;
-        const avg = calculateAverage(studentData.grades);
-        const avgEl = document.getElementById('st-average');
-        const statusEl = document.getElementById('st-status');
-        const msgEl = document.getElementById('st-message');
-        avgEl.innerText = avg;
-        if (studentData.grades.length === 0) {
-            msgEl.innerText = "Sin notas.";
-        } else if (avg >= 18) {
-            msgEl.innerText = "🔥 ¡Nivel Dios!";
-            msgEl.style.color = "#ffeb3b";
-        } else if (avg >= 10) {
-            msgEl.innerText = "🚀 Aprobado.";
-            msgEl.style.color = "#4caf50";
-        } else {
-            msgEl.innerText = "💀 Bug en la matrix.";
-            msgEl.style.color = "#f44336";
-        }
-        statusEl.innerText = avg >= 10 ? "APROBADO" : "REPROBADO";
-        statusEl.className = avg >= 10 ? "status-aprobado" : "status-reprobado";
-        avgEl.className = statusEl.className;
+    function renderStudentView(code, data) {
+        document.getElementById('st-welcome').innerText = `Hola, ${data.name}`;
+        const avg = calculateAverage(data.grades);
+        document.getElementById('st-average').innerText = avg;
+        const st = document.getElementById('st-status');
+        st.innerText = avg >= 10 ? "APROBADO" : "REPROBADO";
+        st.className = avg >= 10 ? "status-aprobado" : "status-reprobado";
+        
         const tbody = document.getElementById('student-grades');
         tbody.innerHTML = "";
-        studentData.grades.forEach((nota, index) => {
-            tbody.innerHTML += `<tr><td>Evaluación ${index + 1}</td><td><strong>${nota}</strong></td></tr>`;
+        data.grades.forEach((n, i) => {
+            tbody.innerHTML += `<tr><td>Evaluación ${i+1}</td><td>${n}</td></tr>`;
         });
     }
 
-    function logout() {
-        location.reload();
-    }
-
-    async function initApp() {
-        await renderTopBoard();
-    }
+    function logout() { location.reload(); }
+    async function initApp() { await renderTopBoard(); }
 </script>
 </body>
 </html>

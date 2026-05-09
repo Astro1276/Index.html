@@ -29,7 +29,7 @@
             text-align: center; padding: 15px; box-sizing: border-box;
         }
         .tile:hover { transform: scale(1.05); border-color: white; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
-        .tile b { font-size: 1.1rem; color: #fff; margin-bottom: 5px; display: block; }
+        .tile b { font-size: 1.1rem; color: #fff; margin-bottom: 5px; display: block; overflow: hidden; text-overflow: ellipsis; width: 100%; }
         .tile span { font-size: 0.75rem; opacity: 0.8; line-height: 1.2; }
 
         .html-t { border-bottom: 5px solid var(--html); }
@@ -39,7 +39,7 @@
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; backdrop-filter: blur(5px); }
         .modal-content { background: #1e293b; width: 100%; max-width: 500px; border-radius: 20px; padding: 30px; position: relative; border: 1px solid #475569; }
         .close-btn { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 2rem; color: #94a3b8; }
-        .example-box { background: #0f172a; padding: 20px; border-radius: 12px; margin-top: 15px; color: #38bdf8; font-family: monospace; white-space: pre-wrap; border: 1px solid #334155; }
+        .example-box { background: #0f172a; padding: 20px; border-radius: 12px; margin-top: 15px; color: #38bdf8; font-family: monospace; white-space: pre-wrap; border: 1px solid #334155; overflow-x: auto; }
     </style>
 </head>
 <body>
@@ -47,21 +47,21 @@
 <div class="container">
     <div class="header-section">
         <h1>LOBO WIKI 🐺</h1>
-        <input type="text" id="search" class="search-bar" placeholder="🔍 Buscar...">
+        <input type="text" id="search" class="search-bar" placeholder="🔍 Buscar etiqueta o propiedad...">
     </div>
 
     <details open>
-        <summary style="color: var(--html);">🧱 HTML (Estructura)</summary>
+        <summary style="color: var(--html);">🧱 HTML (Estructura Avanzada)</summary>
         <div class="grid" id="html-grid"></div>
     </details>
 
     <details>
-        <summary style="color: var(--css);">🎨 CSS (Diseño)</summary>
+        <summary style="color: var(--css);">🎨 CSS (Estilos Modernos)</summary>
         <div class="grid" id="css-grid"></div>
     </details>
 
     <details>
-        <summary style="color: var(--js);">⚡ JS (Lógica)</summary>
+        <summary style="color: var(--js);">⚡ JS (Lógica y API)</summary>
         <div class="grid" id="js-grid"></div>
     </details>
 </div>
@@ -78,140 +78,80 @@
 <script>
     const wikiData = {
         html: [
-            { t: "html", d: "Raíz de un documento HTML.", e: "<!DOCTYPE html>\n<html>\n</html>" },
-            { t: "head", d: "Contenedor de metadatos y enlaces.", e: "<head>\n  <title>Título</title>\n</head>" },
-            { t: "title", d: "Título de la pestaña del navegador.", e: "<title>Mi Wiki</title>" },
-            { t: "meta", d: "Metadatos del documento.", e: "<meta charset='UTF-8'>" },
-            { t: "link", d: "Enlaza recursos externos (ej. CSS).", e: "<link rel='stylesheet' href='estilos.css'>" },
-            { t: "base", d: "URL base para enlaces relativos.", e: "<base href='https://midominio.com/'>" },
-            { t: "body", d: "Contenido visible de la página.", e: "<body>\n  <h1>Hola</h1>\n</body>" },
-            { t: "h1", d: "Encabezado principal (Nivel 1).", e: "<h1>Título Principal</h1>" },
-            { t: "h2", d: "Encabezado secundario (Nivel 2).", e: "<h2>Subtítulo</h2>" },
-            { t: "h3", d: "Encabezado Nivel 3.", e: "<h3>Sección</h3>" },
-            { t: "h4", d: "Encabezado Nivel 4.", e: "<h4>Sub-sección</h4>" },
-            { t: "h5", d: "Encabezado Nivel 5.", e: "<h5>Detalle</h5>" },
-            { t: "h6", d: "Encabezado Nivel 6 (el más pequeño).", e: "<h6>Nota menor</h6>" },
-            { t: "header", d: "Cabecera de la página o sección.", e: "<header>\n  <h1>Logo</h1>\n</header>" },
-            { t: "footer", d: "Pie de página o sección.", e: "<footer>\n  <p>Derechos reservados</p>\n</footer>" },
-            { t: "main", d: "Contenido principal y único.", e: "<main>\n  <p>Lo más importante</p>\n</main>" },
-            { t: "nav", d: "Barra de navegación.", e: "<nav>\n  <a href='#'>Inicio</a>\n</nav>" },
-            { t: "section", d: "Sección temática de contenido.", e: "<section>\n  <h2>Noticias</h2>\n</section>" },
-            { t: "article", d: "Contenido independiente (ej. post).", e: "<article>\n  <h2>Mi Blog</h2>\n</article>" },
-            { t: "aside", d: "Contenido lateral o tangencial.", e: "<aside>\n  <p>Publicidad</p>\n</aside>" },
-            { t: "address", d: "Información de contacto.", e: "<address>\n  Email: lobo@wiki.com\n</address>" },
-            { t: "p", d: "Párrafo de texto.", e: "<p>Este es un texto.</p>" },
-            { t: "hr", d: "Línea horizontal divisoria.", e: "<hr>" },
-            { t: "pre", d: "Texto preformateado (respeta espacios).", e: "<pre>\n  Texto   con   espacios\n</pre>" },
-            { t: "blockquote", d: "Cita en bloque.", e: "<blockquote>\n  Pienso, luego existo.\n</blockquote>" },
-            { t: "ol", d: "Lista ordenada (números).", e: "<ol>\n  <li>Primero</li>\n</ol>" },
-            { t: "ul", d: "Lista desordenada (viñetas).", e: "<ul>\n  <li>Punto</li>\n</ul>" },
-            { t: "li", d: "Elemento de una lista.", e: "<li>Item de lista</li>" },
-            { t: "dl", d: "Lista de descripciones.", e: "<dl>\n  <dt>HTML</dt>\n  <dd>Lenguaje de marcado</dd>\n</dl>" },
-            { t: "dt", d: "Término a describir en una lista.", e: "<dt>CSS</dt>" },
-            { t: "dd", d: "Descripción de un término.", e: "<dd>Da estilos a la web.</dd>" },
-            { t: "figure", d: "Contenedor de medios con leyenda.", e: "<figure>\n  <img src='foto.jpg'>\n</figure>" },
-            { t: "figcaption", d: "Leyenda de un figure.", e: "<figcaption>Foto del Lobo</figcaption>" },
-            { t: "div", d: "Caja divisoria o contenedor genérico.", e: "<div class='caja'>\n  <p>Contenido</p>\n</div>" },
-            { t: "a", d: "Enlace (Hipervínculo).", e: "<a href='https://google.com'>Ir a Google</a>" },
-            { t: "em", d: "Énfasis (suele verse en cursiva).", e: "<em>Texto enfatizado</em>" },
-            { t: "strong", d: "Importancia fuerte (negrita).", e: "<strong>Atención!</strong>" },
-            { t: "small", d: "Texto pequeño (ej. legales).", e: "<small>Términos y condiciones</small>" },
-            { t: "s", d: "Texto tachado (ya no es relevante).", e: "<s>Precio $50</s> $30" },
-            { t: "cite", d: "Título de una obra citada.", e: "<cite>El Quijote</cite>" },
-            { t: "q", d: "Cita corta en línea.", e: "Dijo: <q>Volveré</q>" },
-            { t: "dfn", d: "Define un término por primera vez.", e: "El <dfn>HTML</dfn> es un lenguaje..." },
-            { t: "abbr", d: "Abreviatura o acrónimo.", e: "<abbr title='Organización de Naciones Unidas'>ONU</abbr>" },
-            { t: "time", d: "Fecha y/o hora.", e: "<time datetime='2024-02-14'>San Valentín</time>" },
-            { t: "code", d: "Fragmento de código informático.", e: "Usa <code>console.log()</code>" },
-            { t: "var", d: "Variable matemática o de programación.", e: "El valor de <var>x</var> es 5" },
-            { t: "samp", d: "Salida de ejemplo de un programa.", e: "<samp>Error 404</samp>" },
-            { t: "kbd", d: "Entrada de teclado.", e: "Presiona <kbd>Ctrl</kbd> + <kbd>C</kbd>" },
-            { t: "sub", d: "Subíndice.", e: "H<sub>2</sub>O" },
-            { t: "sup", d: "Superíndice.", e: "E = mc<sup>2</sup>" },
-            { t: "i", d: "Texto en cursiva (idiomas, términos técnicos).", e: "<i>Bonjour</i>" },
-            { t: "b", d: "Texto en negrita (sin dar importancia semántica).", e: "<b>Texto grueso</b>" },
-            { t: "u", d: "Texto subrayado.", e: "<u>Error ortográfico</u>" },
-            { t: "mark", d: "Texto resaltado (marcador amarillo).", e: "Busca la palabra <mark>clave</mark>" },
-            { t: "bdi", d: "Aísla texto con dirección diferente.", e: "<bdi>Texto en árabe</bdi>" },
-            { t: "bdo", d: "Anula la dirección del texto.", e: "<bdo dir='rtl'>Texto al revés</bdo>" },
-            { t: "span", d: "Contenedor genérico en línea.", e: "<span style='color:red'>Rojo</span>" },
-            { t: "br", d: "Salto de línea (Enter).", e: "Línea 1<br>Línea 2" },
-            { t: "wbr", d: "Oportunidad de salto de línea (palabras largas).", e: "Super<wbr>califragilistico" },
-            { t: "img", d: "Inserta una imagen.", e: "<img src='logo.png' alt='Logo'>" },
-            { t: "iframe", d: "Incrusta otra página web.", e: "<iframe src='https://ejemplo.com'></iframe>" },
-            { t: "embed", d: "Punto de integración para apps/plugins.", e: "<embed type='video/webm' src='v.mp4'>" },
-            { t: "object", d: "Recurso externo (imagen, pdf, etc).", e: "<object data='archivo.pdf'></object>" },
-            { t: "video", d: "Reproductor de video.", e: "<video src='clip.mp4' controls></video>" },
-            { t: "audio", d: "Reproductor de audio.", e: "<audio src='cancion.mp3' controls></audio>" },
-            { t: "source", d: "Archivos multimedia para video/audio.", e: "<source src='v.mp4' type='video/mp4'>" },
-            { t: "track", d: "Pistas de texto para media (subtítulos).", e: "<track src='subs.vtt' kind='subtitles'>" },
-            { t: "map", d: "Mapa de imágenes con áreas clicables.", e: "<map name='mimapa'>...</map>" },
-            { t: "area", d: "Área clicable dentro de un <map>.", e: "<area shape='rect' coords='0,0,50,50' href=''>" },
-            { t: "svg", d: "Gráficos vectoriales escalables.", e: "<svg width='100' height='100'>...</svg>" },
-            { t: "table", d: "Crea una tabla de datos.", e: "<table>\n  <tr><td>Dato</td></tr>\n</table>" },
-            { t: "caption", d: "Título de una tabla.", e: "<caption>Ventas Anuales</caption>" },
-            { t: "colgroup", d: "Grupo de columnas en tabla.", e: "<colgroup><col span='2'></colgroup>" },
-            { t: "col", d: "Define propiedades para columnas.", e: "<col style='background-color: red'>" },
-            { t: "tbody", d: "Cuerpo principal de la tabla.", e: "<tbody>\n  <tr><td>A</td></tr>\n</tbody>" },
-            { t: "thead", d: "Cabecera de la tabla.", e: "<thead>\n  <tr><th>Mes</th></tr>\n</thead>" },
-            { t: "tfoot", d: "Pie de la tabla (totales, etc).", e: "<tfoot>\n  <tr><td>Total</td></tr>\n</tfoot>" },
-            { t: "tr", d: "Fila de una tabla (Table Row).", e: "<tr>\n  <td>Dato 1</td>\n  <td>Dato 2</td>\n</tr>" },
-            { t: "td", d: "Celda de datos de una tabla.", e: "<td>Contenido de celda</td>" },
-            { t: "th", d: "Celda de cabecera (Table Header).", e: "<th>Título de columna</th>" },
-            { t: "form", d: "Formulario para enviar datos.", e: "<form action='/enviar' method='POST'>\n</form>" },
-            { t: "label", d: "Etiqueta para un control de formulario.", e: "<label for='user'>Usuario:</label>" },
-            { t: "input", d: "Campo de entrada de datos.", e: "<input type='text' name='usuario'>" },
-            { t: "button", d: "Botón clicable.", e: "<button type='submit'>Enviar</button>" },
-            { t: "select", d: "Menú desplegable de opciones.", e: "<select>\n  <option>Rojo</option>\n</select>" },
-            { t: "datalist", d: "Lista de opciones predefinidas para un input.", e: "<datalist id='lista'>\n  <option value='A'>\n</datalist>" },
-            { t: "optgroup", d: "Agrupa opciones dentro de un <select>.", e: "<optgroup label='Frutas'>\n  <option>Manzana</option>\n</optgroup>" },
-            { t: "option", d: "Opción dentro de select, optgroup o datalist.", e: "<option value='1'>Uno</option>" },
-            { t: "textarea", d: "Caja de texto multilínea.", e: "<textarea rows='4' cols='50'></textarea>" },
-            { t: "output", d: "Resultado de un cálculo o acción.", e: "<output name='resultado'>0</output>" },
-            { t: "progress", d: "Barra de progreso de una tarea.", e: "<progress value='70' max='100'></progress>" },
-            { t: "meter", d: "Medidor de valor dentro de un rango.", e: "<meter value='0.6'>60%</meter>" },
-            { t: "fieldset", d: "Agrupa controles relacionados en un formulario.", e: "<fieldset>\n  <legend>Datos</legend>\n</fieldset>" },
-            { t: "legend", d: "Título descriptivo para un <fieldset>.", e: "<legend>Información Personal</legend>" },
-            { t: "details", d: "Widget interactivo que oculta/muestra info.", e: "<details>\n  <summary>Ver más</summary>\n  Oculto\n</details>" },
-            { t: "summary", d: "Título o resumen de un <details>.", e: "<summary>Preguntas Frecuentes</summary>" },
-            { t: "dialog", d: "Cuadro de diálogo o modal nativo.", e: "<dialog open>\n  <p>Hola soy un modal</p>\n</dialog>" }
+            { t: "html", d: "Raíz del documento.", e: "<html>\n  ...\n</html>" },
+            { t: "head", d: "Contenedor de meta-info.", e: "<head>\n  <meta charset='UTF-8'>\n</head>" },
+            { t: "meta", d: "Datos sobre el documento.", e: "<meta name='description' content='...'>" },
+            { t: "body", d: "Cuerpo de la página.", e: "<body>\n  <h1>Hola</h1>\n</body>" },
+            { t: "main", d: "Contenido principal único.", e: "<main>\n  ...\n</main>" },
+            { t: "section", d: "Sección temática.", e: "<section>\n  <h2>Título</h2>\n</section>" },
+            { t: "article", d: "Contenido independiente.", e: "<article>\n  <h3>Post</h3>\n</article>" },
+            { t: "aside", d: "Contenido tangencial (sidebar).", e: "<aside>\n  <p>Publicidad</p>\n</aside>" },
+            { t: "nav", d: "Enlaces de navegación.", e: "<nav>\n  <a href='#'>Link</a>\n</nav>" },
+            { t: "header", d: "Cabecera de sección.", e: "<header>\n  <h1>Marca</h1>\n</header>" },
+            { t: "footer", d: "Pie de página.", e: "<footer>\n  <p>© 2024</p>\n</footer>" },
+            { t: "div", d: "Contenedor de bloque.", e: "<div>...</div>" },
+            { t: "span", d: "Contenedor en línea.", e: "<span>...</span>" },
+            { t: "p", d: "Párrafo de texto.", e: "<p>Texto aquí.</p>" },
+            { t: "a", d: "Hipervínculo.", e: "<a href='url'>Texto</a>" },
+            { t: "img", d: "Imagen con texto alternativo.", e: "<img src='f.jpg' alt='Lobo'>" },
+            { t: "ul", d: "Lista desordenada.", e: "<ul>\n  <li>Item</li>\n</ul>" },
+            { t: "ol", d: "Lista ordenada.", e: "<ol>\n  <li>Primero</li>\n</ol>" },
+            { t: "table", d: "Estructura de tabla.", e: "<table>\n  <tr><td>Dato</td></tr>\n</table>" },
+            { t: "form", d: "Área de formulario.", e: "<form action='' method='POST'>\n  ...\n</form>" },
+            { t: "input", d: "Campo de entrada.", e: "<input type='text' placeholder='...'>" },
+            { t: "button", d: "Botón ejecutable.", e: "<button>Click</button>" },
+            { t: "textarea", d: "Entrada de texto largo.", e: "<textarea></textarea>" },
+            { t: "select", d: "Lista desplegable.", e: "<select>\n  <option>1</option>\n</select>" },
+            { t: "video", d: "Incrustar video.", e: "<video controls src='v.mp4'></video>" },
+            { t: "audio", d: "Incrustar audio.", e: "<audio controls src='a.mp3'></audio>" },
+            { t: "canvas", d: "Gráficos por script.", e: "<canvas id='miCanvas'></canvas>" },
+            { t: "iframe", d: "Incrustar otra web.", e: "<iframe src='url'></iframe>" },
+            { t: "details", d: "Contenido desplegable.", e: "<details>\n  <summary>Clic</summary>\n  Info\n</details>" },
+            { t: "template", d: "Contenido oculto para JS.", e: "<template id='temp'>\n  <p>Copiame</p>\n</template>" },
+            { t: "blockquote", d: "Cita extensa.", e: "<blockquote>\n  Frase celebre\n</blockquote>" },
+            { t: "code", d: "Fragmento de código.", e: "<code>const x = 0;</code>" },
+            { t: "picture", d: "Imágenes adaptativas.", e: "<picture>\n  <source srcset='...'>\n  <img>\n</picture>" },
+            { t: "dialog", d: "Cuadro de diálogo (Modal).", e: "<dialog open>\n  Es un modal nativo\n</dialog>" }
         ],
         css: [
-            { t: "color", d: "Color del texto.", e: "p {\n  color: #ff0000;\n}" },
-            { t: "background", d: "Fondo del elemento.", e: "div {\n  background: #f0f0f0;\n}" },
-            { t: "font-size", d: "Tamaño de letra.", e: "h1 {\n  font-size: 24px;\n}" },
-            { t: "margin", d: "Espacio exterior.", e: "div {\n  margin: 10px;\n}" },
-            { t: "padding", d: "Espacio interior.", e: "div {\n  padding: 20px;\n}" },
-            { t: "border", d: "Borde del elemento.", e: "input {\n  border: 1px solid black;\n}" },
-            { t: "display: flex", d: "Caja flexible.", e: ".flex {\n  display: flex;\n  gap: 10px;\n}" },
-            { t: "display: grid", d: "Caja de rejilla.", e: ".grid {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n}" },
-            { t: "border-radius", d: "Esquinas redondeadas.", e: "button {\n  border-radius: 10px;\n}" },
-            { t: "width", d: "Ancho del elemento.", e: "img {\n  width: 100%;\n}" },
-            { t: "height", d: "Alto del elemento.", e: "div {\n  height: 100vh;\n}" },
-            { t: "box-shadow", d: "Sombra del elemento.", e: ".card {\n  box-shadow: 2px 2px 5px #ccc;\n}" },
-            { t: "cursor", d: "Tipo de puntero.", e: ".btn {\n  cursor: pointer;\n}" },
-            { t: "transition", d: "Animación de cambios.", e: "a {\n  transition: 0.3s;\n}" },
-            { t: "text-align", d: "Alineación de texto.", e: "p {\n  text-align: center;\n}" },
-            { t: "position", d: "Tipo de posición.", e: ".fixed {\n  position: fixed;\n  top: 0;\n}" },
-            { t: "opacity", d: "Transparencia.", e: ".div {\n  opacity: 0.8;\n}" },
-            { t: "overflow", d: "Manejo de contenido extra.", e: ".div {\n  overflow: hidden;\n}" }
+            { t: "display", d: "Tipo de visualización.", e: "div {\n  display: flex | grid | block;\n}" },
+            { t: "flex-direction", d: "Eje principal de flex.", e: "div {\n  flex-direction: column;\n}" },
+            { t: "justify-content", d: "Alineación eje X.", e: "div {\n  justify-content: center;\n}" },
+            { t: "align-items", d: "Alineación eje Y.", e: "div {\n  align-items: center;\n}" },
+            { t: "grid-template-columns", d: "Columnas en Grid.", e: "div {\n  grid-template-columns: 1fr 2fr;\n}" },
+            { t: "gap", d: "Espacio entre elementos.", e: "div {\n  gap: 20px;\n}" },
+            { t: "position", d: "Método de posicionamiento.", e: "div {\n  position: absolute | relative | fixed | sticky;\n}" },
+            { t: "z-index", d: "Orden de capas (profundidad).", e: "div {\n  z-index: 10;\n}" },
+            { t: "background-image", d: "Imagen de fondo.", e: "div {\n  background-image: url('f.png');\n}" },
+            { t: "box-shadow", d: "Sombra del elemento.", e: "div {\n  box-shadow: 0 4px 10px rgba(0,0,0,0.5);\n}" },
+            { t: "border-radius", d: "Esquinas redondeadas.", e: "div {\n  border-radius: 50%;\n}" },
+            { t: "transition", d: "Animación de cambios.", e: "div {\n  transition: all 0.3s ease;\n}" },
+            { t: "transform", d: "Modificar forma/lugar.", e: "div {\n  transform: scale(1.1) rotate(5deg);\n}" },
+            { t: "animation", d: "Keyframes personalizados.", e: "@keyframes f {\n  to { opacity: 0; }\n}\ndiv { animation: f 2s; }" },
+            { t: "opacity", d: "Nivel de transparencia.", e: "div {\n  opacity: 0.5;\n}" },
+            { t: "backdrop-filter", d: "Efecto blur en fondo.", e: "div {\n  backdrop-filter: blur(10px);\n}" },
+            { t: "aspect-ratio", d: "Relación de aspecto.", e: "div {\n  aspect-ratio: 16 / 9;\n}" },
+            { t: "user-select", d: "Controlar selección de texto.", e: "div {\n  user-select: none;\n}" },
+            { t: "overflow", d: "Control de contenido extra.", e: "div {\n  overflow: hidden | scroll | auto;\n}" },
+            { t: "cursor", d: "Estilo del puntero.", e: "div {\n  cursor: pointer | grab | help;\n}" }
         ],
         js: [
-            { t: "console.log()", d: "Imprimir en consola.", e: "console.log('Hola');" },
-            { t: "alert()", d: "Ventana de alerta.", e: "alert('Mensaje');" },
-            { t: "const / let", d: "Variables modernas.", e: "const x = 5;\nlet y = 10;" },
-            { t: "querySelector()", d: "Seleccionar elemento.", e: "const el = document.querySelector('.clase');" },
-            { t: "addEventListener()", d: "Escuchar eventos.", e: "el.addEventListener('click', () => {\n  /* código */\n});" },
-            { t: "innerHTML", d: "Inyectar HTML.", e: "el.innerHTML = '<b>Nuevo</b>';" },
-            { t: "innerText", d: "Cambiar texto.", e: "el.innerText = 'Hola';" },
-            { t: "style", d: "Cambiar CSS desde JS.", e: "el.style.color = 'blue';" },
-            { t: "if / else", d: "Condiciones.", e: "if (x > 0) {\n  /* código */\n} else {\n  /* código */\n}" },
-            { t: "function", d: "Declarar función.", e: "function saludo() {\n  return 'Hola';\n}" },
-            { t: "fetch()", d: "Pedir datos (API).", e: "fetch(url).then(res => res.json());" },
-            { t: "setTimeout()", d: "Esperar tiempo.", e: "setTimeout(() => {\n  /* código */\n}, 1000);" },
-            { t: "localStorage", d: "Guardar datos localmente.", e: "localStorage.setItem('user', 'Lobo');" },
-            { t: "JSON.parse()", d: "Convertir texto a objeto.", e: "const obj = JSON.parse(texto);" },
-            { t: "classList.toggle()", d: "Poner/Quitar clase.", e: "el.classList.toggle('active');" }
+            { t: "const / let", d: "Declaración de variables.", e: "const id = 1;\nlet nombre = 'Lobo';" },
+            { t: "querySelector", d: "Seleccionar por CSS.", e: "const el = document.querySelector('.clase');" },
+            { t: "addEventListener", d: "Manejar eventos.", e: "el.addEventListener('click', (e) => {\n  console.log('Click!');\n});" },
+            { t: "fetch", d: "Consumo de API.", e: "fetch(url)\n  .then(res => res.json())\n  .then(data => console.log(data));" },
+            { t: "async / await", d: "Asincronía moderna.", e: "async function getData() {\n  const res = await fetch(url);\n  const data = await res.json();\n}" },
+            { t: "localStorage", d: "Persistencia de datos.", e: "localStorage.setItem('tema', 'dark');\nlet t = localStorage.getItem('tema');" },
+            { t: "classList", d: "Manipular clases.", e: "el.classList.add('active');\nel.classList.toggle('hidden');" },
+            { t: "map", d: "Transformar arrays.", e: "const doble = nums.map(n => n * 2);" },
+            { t: "filter", d: "Filtrar arrays.", e: "const pares = nums.filter(n => n % 2 === 0);" },
+            { t: "forEach", d: "Recorrer elementos.", e: "items.forEach(i => console.log(i));" },
+            { t: "JSON.stringify", d: "Objeto a Texto.", e: "const txt = JSON.stringify({id: 1});" },
+            { t: "setTimeout", d: "Ejecución diferida.", e: "setTimeout(() => {\n  alert('Time!');\n}, 2000);" },
+            { t: "setInterval", d: "Ejecución en bucle.", e: "setInterval(() => {\n  console.log('Tic');\n}, 1000);" },
+            { t: "Math.random", d: "Número aleatorio.", e: "const r = Math.floor(Math.random() * 100);" },
+            { t: "Array.from", d: "Crear array de objeto iterable.", e: "const divs = Array.from(document.querySelectorAll('div'));" },
+            { t: "try...catch", d: "Manejo de errores.", e: "try {\n  codigoPeligroso();\n} catch(err) {\n  console.error(err);\n}" }
         ]
     };
 
@@ -269,5 +209,4 @@
     render();
 </script>
 </body>
-    </html>
-    
+</html>

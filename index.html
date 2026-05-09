@@ -15,7 +15,6 @@
         .header-section { text-align: center; margin-bottom: 30px; }
         .search-bar { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #334155; background: var(--card); color: white; font-size: 1rem; margin-bottom: 20px; outline: none; }
 
-        /* DESPLEGABLES */
         details { background: rgba(30, 41, 59, 0.5); border-radius: 15px; margin-bottom: 15px; border: 1px solid #334155; }
         summary { padding: 20px; font-size: 1.2rem; font-weight: bold; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
         summary::after { content: '▶'; font-size: 0.8rem; transition: transform 0.3s; }
@@ -23,7 +22,6 @@
 
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; padding: 20px; }
 
-        /* TILES (Tu diseño de la foto 1000125492.png) */
         .tile {
             background: var(--bg); aspect-ratio: 1 / 1; display: flex; flex-direction: column;
             align-items: center; justify-content: center; border-radius: 15px;
@@ -38,7 +36,6 @@
         .css-t { border-bottom: 5px solid var(--css); }
         .js-t { border-bottom: 5px solid var(--js); }
 
-        /* MODAL */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; backdrop-filter: blur(5px); }
         .modal-content { background: #1e293b; width: 100%; max-width: 500px; border-radius: 20px; padding: 30px; position: relative; border: 1px solid #475569; }
         .close-btn { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 2rem; color: #94a3b8; }
@@ -112,9 +109,8 @@
             { t: "article", d: "Artículo independiente.", e: "<article>\n  <h2>Post</h2>\n</article>" },
             { t: "aside", d: "Barra lateral (tangencial).", e: "<aside>Publicidad</aside>" },
             { t: "details", d: "Acordeón desplegable.", e: "<details>\n  <summary>Info</summary>\n  Oculto\n</details>" },
-            { t: "summary", d: "Título de un details.", e: "<summary>Click aquí</summary>" },
-            ]
-    
+            { t: "summary", d: "Título de un details.", e: "<summary>Click aquí</summary>" }
+        ],
         css: [
             { t: "color", d: "Color del texto.", e: "p {\n  color: #ff0000;\n}" },
             { t: "background", d: "Fondo del elemento.", e: "div {\n  background: #f0f0f0;\n}" },
@@ -140,20 +136,19 @@
             { t: "alert()", d: "Ventana de alerta.", e: "alert('Mensaje');" },
             { t: "const / let", d: "Variables modernas.", e: "const x = 5;\nlet y = 10;" },
             { t: "querySelector()", d: "Seleccionar elemento.", e: "const el = document.querySelector('.clase');" },
-            { t: "addEventListener()", d: "Escuchar eventos.", e: "el.addEventListener('click', () => {\n  //...\n});" },
+            { t: "addEventListener()", d: "Escuchar eventos.", e: "el.addEventListener('click', () => {\n  /* código */\n});" },
             { t: "innerHTML", d: "Inyectar HTML.", e: "el.innerHTML = '<b>Nuevo</b>';" },
             { t: "innerText", d: "Cambiar texto.", e: "el.innerText = 'Hola';" },
             { t: "style", d: "Cambiar CSS desde JS.", e: "el.style.color = 'blue';" },
-            { t: "if / else", d: "Condiciones.", e: "if (x > 0) {\n  //...\n} else {\n  //...\n}" },
+            { t: "if / else", d: "Condiciones.", e: "if (x > 0) {\n  /* código */\n} else {\n  /* código */\n}" },
             { t: "function", d: "Declarar función.", e: "function saludo() {\n  return 'Hola';\n}" },
             { t: "fetch()", d: "Pedir datos (API).", e: "fetch(url).then(res => res.json());" },
-            { t: "setTimeout()", d: "Esperar tiempo.", e: "setTimeout(() => {\n  // algo\n}, 1000);" },
+            { t: "setTimeout()", d: "Esperar tiempo.", e: "setTimeout(() => {\n  /* código */\n}, 1000);" },
             { t: "localStorage", d: "Guardar datos localmente.", e: "localStorage.setItem('user', 'Lobo');" },
             { t: "JSON.parse()", d: "Convertir texto a objeto.", e: "const obj = JSON.parse(texto);" },
             { t: "classList.toggle()", d: "Poner/Quitar clase.", e: "el.classList.toggle('active');" }
         ]
     };
-    
 
     function render() {
         const createGrid = (id, list, type) => {
@@ -161,7 +156,6 @@
             container.innerHTML = ""; 
             
             list.forEach(item => {
-                // MÉTODO SEGURO: Crear elemento uno por uno
                 const tile = document.createElement("div");
                 tile.className = `tile ${type}-t`;
                 
@@ -174,7 +168,6 @@
                 tile.appendChild(title);
                 tile.appendChild(desc);
                 
-                // El clic ahora es 100% confiable
                 tile.addEventListener('click', () => {
                     showModal(item.t, item.d, item.e);
                 });
@@ -197,7 +190,6 @@
 
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    // El buscador abre los menús si hay coincidencias
     document.getElementById('search').oninput = (e) => {
         const val = e.target.value.toLowerCase();
         document.querySelectorAll('details').forEach(det => {
@@ -212,4 +204,5 @@
     render();
 </script>
 </body>
-</html>
+    </html>
+    

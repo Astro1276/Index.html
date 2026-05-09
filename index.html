@@ -92,12 +92,11 @@
             { t: "h5", d: "Encabezado de nivel 5.", e: "<h5>Detalle</h5>" },
             { t: "h6", d: "Encabezado de nivel 6.", e: "<h6>Nota menor</h6>" },
             { t: "p", d: "Define un párrafo de texto.", e: "<p>Este es un párrafo.</p>" },
-            { t: "br", d: "Salto de línea simple.", e: "Texto antes.
-            Texto después." },
+            { t: "br", d: "Salto de línea simple.", e: "Texto antes.<br>\nTexto después." },
             { t: "hr", d: "Cambio temático o línea horizontal.", e: "<hr>" },
             { t: "div", d: "Contenedor de bloque genérico.", e: "<div>\n  <p>Contenido</p>\n</div>" },
             { t: "span", d: "Contenedor en línea genérico.", e: "<span>Texto resaltado</span>" },
-            { t: "a", d: "Define un hipervínculo.", e: "<a href='[https://google.com](https://google.com)'>Enlace</a>" },
+            { t: "a", d: "Define un hipervínculo.", e: "<a href='https://google.com'>Enlace</a>" },
             { t: "strong", d: "Texto con importancia fuerte (negrita).", e: "<strong>Importante</strong>" },
             { t: "em", d: "Texto con énfasis (cursiva).", e: "<em>Énfasis</em>" },
             { t: "b", d: "Texto en negrita por estilo, sin importancia semántica.", e: "<b>Negrita</b>" },
@@ -125,7 +124,7 @@
             { t: "audio", d: "Reproduce contenido de sonido.", e: "<audio controls src='audio.mp3'></audio>" },
             { t: "source", d: "Define recursos multimedia para video o audio.", e: "<source src='file.ogg' type='audio/ogg'>" },
             { t: "track", d: "Define pistas de texto para video o audio (subtítulos).", e: "<track kind='subtitles' src='subs.vtt'>" },
-            { t: "iframe", d: "Incrusta otra página web.", e: "<iframe src='[https://ejemplo.com](https://ejemplo.com)'></iframe>" },
+            { t: "iframe", d: "Incrusta otra página web.", e: "<iframe src='https://ejemplo.com'></iframe>" },
             { t: "canvas", d: "Contenedor para gráficos dibujados mediante scripts.", e: "<canvas id='miCanvas'></canvas>" },
             { t: "svg", d: "Contenedor para gráficos vectoriales.", e: "<svg width='100' height='100'>...</svg>" },
             { t: "form", d: "Define un formulario para entrada de usuario.", e: "<form action='/submit'>\n  <input type='text'>\n</form>" },
@@ -163,21 +162,48 @@
             { t: "style", d: "Contiene reglas de estilo CSS.", e: "<style>\n  body { color: red; }\n</style>" },
             { t: "link", d: "Relaciona el documento con recursos externos (CSS).", e: "<link rel='stylesheet' href='style.css'>" },
             { t: "meta", d: "Define metadatos (charset, viewport, etc.).", e: "<meta charset='UTF-8'>" },
-            { t: "base", d: "Especifica la URL base para todas las relativas.", e: "<base href='[https://cdn.com/](https://cdn.com/)'>" },
+            { t: "base", d: "Especifica la URL base para todas las relativas.", e: "<base href='https://cdn.com/'>" },
             { t: "time", d: "Representa una fecha o tiempo específico.", e: "<time datetime='2024-01-01'>Año Nuevo</time>" },
             { t: "progress", d: "Barra de progreso.", e: "<progress value='50' max='100'></progress>" },
             { t: "meter", d: "Medida escalar dentro de un rango conocido.", e: "<meter value='0.6'>60%</meter>" },
             { t: "template", d: "Contenedor de contenido HTML que no se renderiza al cargar.", e: "<template>\n  <p>Copia esto</p>\n</template>" }
-
         ],
         css: [
-            { t: "color", d: "Color del texto.", e: "p { color: red; }" },
-            { t: "display: flex", d: "Alineación flexible.", e: ".caja { display: flex; }" }
+            { t: "color", d: "Color del texto.", e: "p {\n  color: #ff5500;\n}" },
+            { t: "background-color", d: "Color de fondo.", e: "div {\n  background-color: black;\n}" },
+            { t: "display: flex", d: "Activa el modelo de caja flexible.", e: ".container {\n  display: flex;\n  justify-content: center;\n}" },
+            { t: "display: grid", d: "Activa el modelo de rejilla.", e: ".grid {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n}" },
+            { t: "margin", d: "Espacio exterior del elemento.", e: ".caja {\n  margin: 20px auto;\n}" },
+            { t: "padding", d: "Espacio interior del elemento.", e: ".caja {\n  padding: 15px;\n}" },
+            { t: "border", d: "Borde del elemento.", e: "img {\n  border: 2px solid blue;\n}" },
+            { t: "border-radius", d: "Redondea las esquinas.", e: "button {\n  border-radius: 8px;\n}" },
+            { t: "font-size", d: "Tamaño de la fuente.", e: "h1 {\n  font-size: 2rem;\n}" },
+            { t: "font-family", d: "Tipo de letra.", e: "body {\n  font-family: Arial, sans-serif;\n}" },
+            { t: "text-align", d: "Alineación del texto.", e: "p {\n  text-align: center;\n}" },
+            { t: "position", d: "Tipo de posicionamiento.", e: ".sticky {\n  position: sticky;\n  top: 0;\n}" },
+            { t: "box-shadow", d: "Añade sombra a un elemento.", e: ".card {\n  box-shadow: 0 4px 8px gray;\n}" },
+            { t: "transition", d: "Efecto de transición.", e: "button {\n  transition: 0.3s ease;\n}" },
+            { t: "cursor", d: "Cambia el icono del puntero.", e: ".link {\n  cursor: pointer;\n}" }
         ],
         js: [
-            { t: "alert()", d: "Mensaje emergente.", e: "alert('Hola');" }
+            { t: "console.log()", d: "Imprime mensajes en la consola.", e: "console.log('Depurando...');" },
+            { t: "alert()", d: "Muestra un mensaje emergente.", e: "alert('¡Hola!');" },
+            { t: "confirm()", d: "Muestra un diálogo de confirmación.", e: "if(confirm('¿Seguro?')) {\n  // código\n}" },
+            { t: "prompt()", d: "Pide un dato al usuario.", e: "let nombre = prompt('¿Tu nombre?');" },
+            { t: "document.getElementById()", d: "Busca un elemento por su ID.", e: "const el = document.getElementById('miId');" },
+            { t: "document.querySelector()", d: "Busca por selector CSS.", e: "const btn = document.querySelector('.btn');" },
+            { t: "addEventListener()", d: "Escucha un evento.", e: "btn.addEventListener('click', () => {\n  console.log('Click!');\n});" },
+            { t: "classList.add()", d: "Añade una clase CSS.", e: "elemento.classList.add('activo');" },
+            { t: "innerHTML", d: "Modifica el HTML interno.", e: "div.innerHTML = '<h1>Nuevo</h1>';" },
+            { t: "innerText", d: "Modifica el texto interno.", e: "p.innerText = 'Hola mundo';" },
+            { t: "fetch()", d: "Petición HTTP asíncrona.", e: "fetch('url')\n  .then(res => res.json())\n  .then(data => console.log(data));" },
+            { t: "setTimeout()", d: "Ejecuta código después de un tiempo.", e: "setTimeout(() => {\n  alert('Pasó 1 seg');\n}, 1000);" },
+            { t: "localStorage", d: "Almacenamiento local persistente.", e: "localStorage.setItem('tema', 'oscuro');" },
+            { t: "Array.forEach()", d: "Recorre una lista.", e: "lista.forEach(item => {\n  console.log(item);\n});" },
+            { t: "Math.random()", d: "Genera un número aleatorio.", e: "let num = Math.random() * 10;" }
         ]
     };
+
 
     function render() {
         const createGrid = (id, list, type) => {

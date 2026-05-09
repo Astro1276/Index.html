@@ -3,189 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lobo Wiki Total | Enciclopedia</title>
+    <title>Lobo Wiki | Mosaico Pro</title>
     <style>
         :root {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --accent-html: #ef4444;
-            --accent-css: #3b82f6;
-            --accent-js: #eab308;
-            --text: #f8fafc;
-            --border: #334155;
+            --bg: #0f172a; --card: #1e293b; --text: #f8fafc;
+            --html: #ef4444; --css: #3b82f6; --js: #eab308;
         }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0; padding: 20px;
-        }
-        .container { max-width: 1000px; margin: auto; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .container { max-width: 1100px; margin: auto; }
         
-        .search-box {
-            width: 100%; padding: 15px; margin-bottom: 25px;
-            border-radius: 10px; border: 1px solid var(--border);
-            background: var(--card); color: white; font-size: 1rem;
-        }
+        .header-section { text-align: center; margin-bottom: 30px; }
+        .search-bar { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #334155; background: var(--card); color: white; font-size: 1rem; margin-bottom: 20px; }
 
-        /* Contenedor de Categoría */
-        .category-block {
+        h2 { border-bottom: 2px solid #334155; padding-bottom: 10px; margin-top: 40px; font-size: 1.2rem; }
+
+        /* GRID DE MOSAICO */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 15px; }
+
+        /* CUADRITOS (TILES) */
+        .tile {
             background: var(--card);
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
-            overflow: hidden;
-        }
-
-        .category-header {
-            padding: 15px;
+            height: 100px;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
-            background: rgba(0,0,0,0.2);
-            font-weight: bold;
-            border-bottom: 1px solid var(--border);
+            justify-content: center;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            text-align: center;
+            padding: 10px;
         }
+        .tile:hover { transform: scale(1.05); border-color: white; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .tile code { font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; }
+        .tile span { font-size: 0.7rem; opacity: 0.7; }
 
-        /* EL GRID (Igual para todos) */
-        .grid-layout {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 15px;
-            padding: 20px;
-        }
+        /* COLORES DE TILES */
+        .html-t { border-bottom: 4px solid var(--html); }
+        .css-t { border-bottom: 4px solid var(--css); }
+        .js-t { border-bottom: 4px solid var(--js); }
 
-        /* Estilo de los Cuadritos (Cards) */
-        .item-card {
-            background: #0f172a;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #ccc;
-            transition: transform 0.2s;
+        /* VENTANA MODAL (EL EJEMPLO) */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: none; align-items: center;
+            justify-content: center; z-index: 1000; padding: 20px;
         }
-        .item-card:hover { transform: translateY(-3px); }
+        .modal-content {
+            background: #1e293b; width: 100%; max-width: 500px;
+            border-radius: 15px; padding: 25px; position: relative;
+            border: 1px solid #475569; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .close-btn { position: absolute; top: 15px; right: 15px; cursor: pointer; font-size: 1.5rem; }
         
-        .item-card code {
-            display: block;
-            font-size: 1rem;
-            font-weight: bold;
-            color: white;
-            margin-bottom: 8px;
+        .example-box {
+            background: #0f172a; padding: 15px; border-radius: 8px;
+            margin-top: 15px; color: #38bdf8; font-family: monospace;
+            white-space: pre-wrap; border: 1px solid #334155;
         }
-        .item-card p {
-            margin: 0;
-            font-size: 0.85rem;
-            color: #94a3b8;
-            line-height: 1.4;
-        }
-
-        /* Colores */
-        .html-card { border-left-color: var(--accent-html); }
-        .css-card { border-left-color: var(--accent-css); }
-        .js-card { border-left-color: var(--accent-js); }
-
-        .badge {
-            font-size: 0.7rem; padding: 3px 8px;
-            border-radius: 4px; text-transform: uppercase;
-        }
-        .bg-html { background: var(--accent-html); }
-        .bg-css { background: var(--accent-css); }
-        .bg-js { background: var(--accent-js); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <input type="text" id="search" class="search-box" placeholder="🔍 Buscar en la enciclopedia (ej: 'flex', 'div', 'fetch')...">
-
-    <div class="category-block">
-        <div class="category-header">
-            <span>🧱 HTML5 (Estructura)</span>
-            <span class="badge bg-html">Esqueleto</span>
-        </div>
-        <div class="grid-layout" id="html-grid"></div>
+    <div class="header-section">
+        <h1>LOBO WIKI 🐺</h1>
+        <input type="text" id="search" class="search-bar" placeholder="Busca etiquetas o funciones...">
     </div>
 
-    <div class="category-block">
-        <div class="category-header">
-            <span>🎨 CSS3 (Diseño)</span>
-            <span class="badge bg-css">Estilo</span>
-        </div>
-        <div class="grid-layout" id="css-grid"></div>
-    </div>
+    <h2 style="color: var(--html);">🧱 ESTRUCTURA (HTML)</h2>
+    <div class="grid" id="html-grid"></div>
 
-    <div class="category-block">
-        <div class="category-header">
-            <span>⚡ JavaScript (Acción)</span>
-            <span class="badge bg-js">Cerebro</span>
-        </div>
-        <div class="grid-layout" id="js-grid"></div>
+    <h2 style="color: var(--css);">🎨 DISEÑO (CSS)</h2>
+    <div class="grid" id="css-grid"></div>
+
+    <h2 style="color: var(--js);">⚡ LÓGICA (JS)</h2>
+    <div class="grid" id="js-grid"></div>
+</div>
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">×</span>
+        <h3 id="m-title" style="margin-top: 0;"></h3>
+        <p id="m-desc" style="font-size: 0.9rem; color: #94a3b8;"></p>
+        <div class="example-box" id="m-code"></div>
     </div>
 </div>
 
 <script>
-    const database = {
+    const data = {
         html: [
-            { t: "<div>", d: "Contenedor genérico para agrupar elementos." },
-            { t: "<a>", d: "Enlace o hipervínculo a otra página." },
-            { t: "<img>", d: "Inserta una imagen en el documento." },
-            { t: "<form>", d: "Crea una sección para recolectar datos." },
-            { t: "<input>", d: "Campo donde el usuario escribe datos." },
-            { t: "<ul> / <li>", d: "Listas con puntos (desordenadas)." },
-            { t: "<h1> - <h6>", d: "Títulos de mayor a menor importancia." },
-            { t: "<button>", d: "Botón clickeable para ejecutar acciones." },
-            { t: "<section>", d: "Define una sección temática en la web." },
-            { t: "<iframe>", d: "Incrusta otra página dentro de la tuya." }
+            { t: "<div>", d: "Caja contenedora.", e: "<div>\n  <p>Contenido</p>\n</div>" },
+            { t: "<a>", d: "Enlace web.", e: '<a href="https://google.com">Ir a Google</a>' },
+            { t: "<img>", d: "Imagen.", e: '<img src="lobo.jpg" alt="Lobo">' },
+            { t: "<button>", d: "Botón interactivo.", e: '<button onclick="alert()">Click</button>' }
         ],
         css: [
-            { t: "display: flex", d: "Alinea elementos de forma flexible." },
-            { t: "grid-template", d: "Crea rejillas complejas de columnas." },
-            { t: "position", d: "Controla el lugar (static, absolute, relative)." },
-            { t: "border-radius", d: "Redondea las esquinas de los cuadros." },
-            { t: "background", d: "Define el color o imagen de fondo." },
-            { t: "box-shadow", d: "Agrega sombras a los elementos." },
-            { t: "animation", d: "Aplica movimientos suaves a los objetos." },
-            { t: "media-queries", d: "Hace que la web se adapte a celulares." },
-            { t: "z-index", d: "Define qué elemento va encima de otro." },
-            { t: "transition", d: "Controla la velocidad de los cambios." }
+            { t: "color", d: "Cambia el color del texto.", e: "p {\n  color: red;\n}" },
+            { t: "display: flex", d: "Alineación flexible.", e: ".caja {\n  display: flex;\n  justify-content: center;\n}" },
+            { t: "border-radius", d: "Esquinas redondeadas.", e: "div {\n  border-radius: 50%;\n}" }
         ],
         js: [
-            { t: "fetch()", d: "Obtiene datos desde servidores o APIs." },
-            { t: "querySelector()", d: "Busca un elemento HTML para usarlo." },
-            { t: "addEventListener", d: "Detecta clicks, teclas o movimientos." },
-            { t: "localStorage", d: "Guarda datos de forma permanente." },
-            { t: "array.map()", d: "Transforma una lista de datos en otra." },
-            { t: "async / await", d: "Maneja procesos que tardan tiempo." },
-            { t: "JSON.parse()", d: "Convierte texto en objeto de datos." },
-            { t: "classList.toggle", d: "Prende o apaga una clase CSS." },
-            { t: "setInterval()", d: "Repite un código cada X segundos." },
-            { t: "const / let", d: "Crea variables para guardar datos." }
+            { t: "alert()", d: "Muestra alerta.", e: "alert('¡Hola Lobo!');" },
+            { t: "querySelector()", d: "Selecciona HTML.", e: "const b = document.querySelector('button');" },
+            { t: "math.random()", d: "Número aleatorio.", e: "let n = Math.random() * 10;" }
         ]
     };
 
-    function init() {
-        const fill = (id, data, type) => {
-            const el = document.getElementById(id);
-            el.innerHTML = data.map(i => `
-                <div class="item-card ${type}-card">
+    function render() {
+        const fill = (id, items, cls) => {
+            document.getElementById(id).innerHTML = items.map(i => `
+                <div class="tile ${cls}-t" onclick="showExample('${i.t}', '${i.d}', \`${i.e}\`)">
                     <code>${i.t}</code>
-                    <p>${i.d}</p>
+                    <span>${i.d}</span>
                 </div>
             `).join('');
         };
-        fill('html-grid', database.html, 'html');
-        fill('css-grid', database.css, 'css');
-        fill('js-grid', database.js, 'js');
+        fill('html-grid', data.html, 'html');
+        fill('css-grid', data.css, 'css');
+        fill('js-grid', data.js, 'js');
     }
 
+    function showExample(title, desc, example) {
+        document.getElementById('m-title').innerText = title;
+        document.getElementById('m-desc').innerText = desc;
+        document.getElementById('m-code').innerText = example;
+        document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+    // Buscador
     document.getElementById('search').oninput = (e) => {
         const val = e.target.value.toLowerCase();
-        document.querySelectorAll('.item-card').forEach(card => {
-            card.style.display = card.innerText.toLowerCase().includes(val) ? "block" : "none";
+        document.querySelectorAll('.tile').forEach(t => {
+            t.style.display = t.innerText.toLowerCase().includes(val) ? "flex" : "none";
         });
     };
 
-    init();
+    render();
 </script>
 </body>
 </html>

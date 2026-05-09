@@ -3,260 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Notas - Lobo Academy</title>
+    <title>Lobo Wiki - La Enciclopedia del Programador</title>
     <style>
-        :root { --pro-blue: #1f4e78; --pro-green: #375623; --dark: #121212; --danger: #cc0000; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--dark); color: white; text-align: center; margin: 0; padding: 20px; }
-        .container { max-width: 850px; margin: auto; background: #1e1e1e; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        h1 { color: #58a6ff; margin-bottom: 5px; }
-        .subtitle { color: #888; font-size: 0.9em; margin-bottom: 20px; }
-        input, button { padding: 12px; margin: 5px; border-radius: 6px; border: none; outline: none; font-size: 1em; }
-        input { background: #333; color: white; width: calc(100% - 30px); max-width: 200px; }
-        button { cursor: pointer; background: var(--pro-blue); color: white; font-weight: bold; transition: 0.3s; }
-        button:hover { filter: brightness(1.2); }
-        .btn-logout { background: #555; font-size: 0.8em; padding: 8px 15px; margin-top: 15px; display: none; }
-        .btn-delete { background: var(--danger); font-size: 0.8em; padding: 5px 10px; margin: 0; }
-        .admin-section { background: #252525; padding: 20px; margin-top: 20px; border-radius: 8px; display: none; border-left: 4px solid var(--pro-green); }
-        .student-section { background: #252525; padding: 20px; margin-top: 20px; border-radius: 8px; display: none; border-left: 4px solid var(--pro-blue); }
-        .top-board { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 15px; margin-top: 20px; max-width: 300px; margin-left: auto; margin-right: auto; }
-        .top-board h3 { color: #ffd700; margin-top: 0; font-size: 1.2em; }
-        .top-list { list-style: none; padding: 0; margin: 0; }
-        .top-list li { background: #222; margin: 5px 0; padding: 8px; border-radius: 5px; color: #aaa; font-weight: bold; }
-        .top-list li span { color: white; }
-        .stats-grid { display: flex; justify-content: center; gap: 20px; margin: 15px 0; }
-        .stat-box { background: #333; padding: 15px 25px; border-radius: 8px; min-width: 120px; }
-        .stat-box h2 { margin: 0; font-size: 2em; color: #58a6ff; }
-        .stat-box p { margin: 5px 0 0 0; color: #aaa; font-size: 0.9em; text-transform: uppercase; }
-        .status-aprobado { color: #4caf50 !important; }
-        .status-reprobado { color: #f44336 !important; }
-        .inspirational-msg { font-style: italic; color: #ffeb3b; margin-bottom: 20px; font-size: 1.1em; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border-bottom: 1px solid #444; padding: 12px; text-align: center; }
-        th { background: #2a2a2a; color: #aaa; text-transform: uppercase; font-size: 0.8em; }
-        .pass-change { margin-top: 20px; padding-top: 20px; border-top: 1px solid #444; }
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent-html: #ef4444;
+            --accent-css: #3b82f6;
+            --accent-js: #eab308;
+            --text: #f8fafc;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: auto; }
+        h1 { text-align: center; color: var(--text); letter-spacing: 2px; }
+        
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: var(--card);
+            color: white;
+        }
+
+        /* Estilo de los Acordeones */
+        details {
+            background: var(--card);
+            margin-bottom: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+        summary {
+            padding: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        summary::after { content: "▼"; font-size: 0.8rem; color: #64748b; }
+        details[open] summary::after { content: "▲"; }
+        
+        .content {
+            padding: 15px;
+            border-top: 1px solid #334155;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .tag-card {
+            background: #0f172a;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #ccc;
+        }
+        .tag-card code { font-weight: bold; color: white; }
+        .tag-card p { margin: 5px 0 0; font-size: 0.85rem; color: #94a3b8; }
+
+        /* Colores por Categoría */
+        .html-cat { border-left-color: var(--accent-html); }
+        .css-cat { border-left-color: var(--accent-css); }
+        .js-cat { border-left-color: var(--accent-js); }
+        
+        .badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            margin-left: 10px;
+        }
+        .bg-html { background: var(--accent-html); color: white; }
+        .bg-css { background: var(--accent-css); color: white; }
+        .bg-js { background: var(--accent-js); color: white; }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body onload="initApp()">
+<body>
 
 <div class="container">
-    <h1>🐺 Notas</h1>
-    <p class="subtitle">Portal del Estudiante & Admin</p>
+    <h1>LOBO WIKI 🐺</h1>
+    <input type="text" id="search" class="search-box" placeholder="Busca una etiqueta, propiedad o función...">
 
-    <div id="login-section">
-        <p>Ingresa tu código e identificación:</p>
-        <input type="text" id="userInput" placeholder="Código (ID)">
-        <input type="password" id="passInput" placeholder="Contraseña">
-        <button onclick="login()">Ingresar</button>
-
-        <div class="top-board">
-            <h3>🏆 Top Lobos</h3>
-            <ul class="top-list" id="top-students-list"></ul>
-        </div>
-    </div>
-
-    <div id="admin-panel" class="admin-section">
-        <h3 style="color: var(--pro-green);">Panel de Control (Admin)</h3>
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
-            <input type="text" id="stdCode" placeholder="Código">
-            <input type="text" id="stdName" placeholder="Nombre">
-            <input type="number" id="stdGrade" placeholder="Nota" min="0" max="20">
-            <button onclick="addGrade()" style="background: var(--pro-green);">Añadir Nota</button>
-        </div>
-        <div style="overflow-x: auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Nombre</th>
-                        <th>Notas</th>
-                        <th>Promedio</th>
-                        <th>Estado</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody id="admin-table"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="student-panel" class="student-section">
-        <h2 id="st-welcome">Bienvenido</h2>
-        <p class="inspirational-msg" id="st-message"></p>
-        <div class="stats-grid">
-            <div class="stat-box">
-                <h2 id="st-average">0.0</h2>
-                <p>Promedio</p>
+    <details open>
+        <summary>🧱 HTML5 (Estructura Total) <span class="badge bg-html">Esqueleto</span></summary>
+        <div class="content" id="html-list">
             </div>
-            <div class="stat-box">
-                <h2 id="st-status">-</h2>
-                <p>Estado</p>
-            </div>
-        </div>
-        <table>
-            <thead>
-                <tr><th>Evaluación</th><th>Nota</th></tr>
-            </thead>
-            <tbody id="student-grades"></tbody>
-        </table>
-        
-        <div class="pass-change">
-            <h4>Seguridad</h4>
-            <input type="password" id="newPass" placeholder="Nueva Contraseña">
-            <button onclick="changePassword()">Actualizar Clave</button>
-        </div>
-    </div>
+    </details>
 
-    <button class="btn-logout" id="btnLogout" onclick="logout()">Cerrar Sesión</button>
+    <details>
+        <summary>🎨 CSS3 (Estilos y Layout) <span class="badge bg-css">Diseño</span></summary>
+        <div class="content" id="css-list">
+        </div>
+    </details>
+
+    <details>
+        <summary>⚡ JavaScript (Lógica y DOM) <span class="badge bg-js">Cerebro</span></summary>
+        <div class="content" id="js-list">
+        </div>
+    </details>
 </div>
 
 <script>
-    const SUPABASE_URL = 'https://zipgkvvyugyisxssbmku.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_X1lQYk4ghFJtbEanKICWsg_oYj6Eu19';
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    let currentUserCode = null;
+    const db = {
+        html: [
+            { t: "<html>", d: "Raíz del documento." },
+            { t: "<head>", d: "Metadatos y enlaces externos." },
+            { t: "<body>", d: "Contenido visible de la web." },
+            { t: "<div>", d: "Contenedor genérico en bloque." },
+            { t: "<span>", d: "Contenedor genérico en línea." },
+            { t: "<a>", d: "Hipervínculo a otras páginas." },
+            { t: "<img>", d: "Muestra una imagen." },
+            { t: "<ul> / <li>", d: "Listas desordenadas." },
+            { t: "<table>", d: "Crea tablas de datos." },
+            { t: "<form>", d: "Formulario para enviar datos." },
+            { t: "<input>", d: "Campo de entrada de datos." },
+            { t: "<header> / <footer>", d: "Secciones de cabecera y pie." }
+        ],
+        css: [
+            { t: "display", d: "Define el tipo de caja (flex, grid, block)." },
+            { t: "position", d: "Ubicación del elemento (absolute, relative, fixed)." },
+            { t: "color / background", d: "Colores de letra y de fondo." },
+            { t: "margin / padding", d: "Espacios externos e internos." },
+            { t: "border", d: "Define el borde de un elemento." },
+            { t: "width / height", d: "Dimensiones del elemento." },
+            { t: "flex-direction", d: "Eje de los elementos en Flexbox." },
+            { t: "grid-template-columns", d: "Define columnas en Grid." },
+            { t: "z-index", d: "Orden de capas (qué está encima de qué)." },
+            { t: "@keyframes", d: "Base para crear animaciones." }
+        ],
+        js: [
+            { t: "console.log()", d: "Imprime mensajes en la consola." },
+            { t: "document.querySelector()", d: "Selecciona elementos del HTML." },
+            { t: "addEventListener()", d: "Escucha eventos (clicks, teclas)." },
+            { t: "fetch()", d: "Peticiones a servidores o APIs." },
+            { t: "if / else", d: "Condicionales de lógica." },
+            { t: "for / forEach", d: "Bucles para repetir acciones." },
+            { t: "setTimeout()", d: "Ejecuta código después de un tiempo." },
+            { t: "localStorage", d: "Guarda datos en el navegador." },
+            { t: "JSON.stringify()", d: "Convierte objetos en texto." },
+            { t: "function / =>", d: "Define bloques de código reutilizables." }
+        ]
+    };
 
-    async function getDB() {
-        const { data, error } = await _supabase.from('diccionario').select('*');
-        if (error) return {};
-        const db = {};
-        data.forEach(s => {
-            db[s.code] = { name: s.name, grades: s.grades || [], password: s.password || "0000" };
+    function loadWiki() {
+        const render = (listId, data, cat) => {
+            const container = document.getElementById(listId);
+            container.innerHTML = data.map(item => `
+                <div class="tag-card ${cat}-cat">
+                    <code>${item.t}</code>
+                    <p>${item.d}</p>
+                </div>
+            `).join('');
+        };
+
+        render('html-list', db.html, 'html');
+        render('css-list', db.css, 'css');
+        render('js-list', db.js, 'js');
+    }
+
+    // Buscador en tiempo real
+    document.getElementById('search').addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        document.querySelectorAll('.tag-card').forEach(card => {
+            const text = card.innerText.toLowerCase();
+            card.style.display = text.includes(term) ? "block" : "none";
         });
-        return db;
-    }
+    });
 
-    function calculateAverage(grades) {
-        if (!grades || grades.length === 0) return 0;
-        return parseFloat((grades.reduce((a, b) => a + b, 0) / grades.length).toFixed(1));
-    }
-
-    async function renderTopBoard() {
-        const db = await getDB();
-        const listEl = document.getElementById('top-students-list');
-        listEl.innerHTML = "";
-        let arr = [];
-        for (const c in db) {
-            let avg = calculateAverage(db[c].grades);
-            if (db[c].grades.length > 0) arr.push({ code: c, avg: avg });
-        }
-        arr.sort((a, b) => b.avg - a.avg);
-        const medals = ["🥇", "🥈", "🥉"];
-        if (arr.length === 0) {
-            listEl.innerHTML = "<li>Sin registros</li>";
-            return;
-        }
-        arr.slice(0, 3).forEach((s, i) => {
-            listEl.innerHTML += `<li>${medals[i]} ID: <span>${s.code}</span> (Prom: ${s.avg})</li>`;
-        });
-    }
-
-    async function login() {
-        const user = document.getElementById('userInput').value.trim();
-        const pass = document.getElementById('passInput').value;
-        if (!user || !pass) return;
-
-        if (user === "admin" && pass === "1276") {
-            showPanel('admin-panel');
-            await renderAdminView();
-        } else {
-            const db = await getDB();
-            const student = db[user];
-            if (student && student.password === pass) {
-                currentUserCode = user;
-                showPanel('student-panel');
-                renderStudentView(user, student);
-            } else {
-                alert("Credenciales incorrectas");
-            }
-        }
-    }
-
-    function showPanel(id) {
-        document.getElementById('login-section').style.display = "none";
-        document.getElementById('btnLogout').style.display = "inline-block";
-        document.getElementById(id).style.display = "block";
-    }
-
-    async function addGrade() {
-        const code = document.getElementById('stdCode').value.trim();
-        const name = document.getElementById('stdName').value.trim();
-        const grade = parseFloat(document.getElementById('stdGrade').value);
-        if (!code || !name || isNaN(grade)) return;
-
-        const db = await getDB();
-        let currentGrades = db[code] ? db[code].grades : [];
-        let currentPass = db[code] ? db[code].password : "0000";
-        currentGrades.push(grade);
-
-        await _supabase.from('diccionario').upsert({ 
-            code: code, name: name, grades: currentGrades, password: currentPass 
-        }, { onConflict: 'code' });
-
-        document.getElementById('stdGrade').value = "";
-        await renderAdminView();
-        await renderTopBoard();
-    }
-
-    async function changePassword() {
-        const newPass = document.getElementById('newPass').value;
-        if (newPass.length < 4) {
-            alert("Mínimo 4 caracteres");
-            return;
-        }
-        const { error } = await _supabase.from('diccionario')
-            .update({ password: newPass })
-            .eq('code', currentUserCode);
-        
-        if (!error) {
-            alert("Contraseña actualizada");
-            document.getElementById('newPass').value = "";
-        }
-    }
-
-    async function deleteLastGrade(code) {
-        if (!confirm("¿Borrar última nota?")) return;
-        const db = await getDB();
-        let g = db[code].grades;
-        g.pop();
-        await _supabase.from('diccionario').update({ grades: g }).eq('code', code);
-        await renderAdminView();
-        await renderTopBoard();
-    }
-
-    async function renderAdminView() {
-        const db = await getDB();
-        const tbody = document.getElementById('admin-table');
-        tbody.innerHTML = "";
-        for (const c in db) {
-            const s = db[c];
-            const avg = calculateAverage(s.grades);
-            const cl = avg >= 10 ? "status-aprobado" : "status-reprobado";
-            tbody.innerHTML += `<tr>
-                <td>${c}</td><td>${s.name}</td><td>${s.grades.join("|")}</td>
-                <td>${avg}</td><td class="${cl}">${avg >= 10 ? "Aprobado" : "Reprobado"}</td>
-                <td><button class="btn-delete" onclick="deleteLastGrade('${c}')">Deshacer</button></td>
-            </tr>`;
-        }
-    }
-
-    function renderStudentView(code, data) {
-        document.getElementById('st-welcome').innerText = `Hola, ${data.name}`;
-        const avg = calculateAverage(data.grades);
-        document.getElementById('st-average').innerText = avg;
-        const st = document.getElementById('st-status');
-        st.innerText = avg >= 10 ? "APROBADO" : "REPROBADO";
-        st.className = avg >= 10 ? "status-aprobado" : "status-reprobado";
-        
-        const tbody = document.getElementById('student-grades');
-        tbody.innerHTML = "";
-        data.grades.forEach((n, i) => {
-            tbody.innerHTML += `<tr><td>Evaluación ${i+1}</td><td>${n}</td></tr>`;
-        });
-    }
-
-    function logout() { location.reload(); }
-    async function initApp() { await renderTopBoard(); }
+    loadWiki();
 </script>
+
 </body>
 </html>

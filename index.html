@@ -187,28 +187,56 @@
             { t: "scroll-behavior", d: "Desplazamiento suave.", e: "html {\n  scroll-behavior: smooth;\n}" },
             { t: "accent-color", d: "Color de controles nativos.", e: "input {\n  accent-color: red;\n}" },
             { t: "list-style", d: "Estilo de viñetas en listas.", e: "ul {\n  list-style: none;\n}" },
-            { t: "object-fit", d: "Cómo encaja una img/video.", e: "img {\n  object-fit: cover;\n}" }
+            { t: "object-fit", d: "Cómo encaja una img/video.", e: "img {\n  object-fit: cover;\n}" },
+    
         ],
 
         js: [
-            { t: "const / let", d: "Declaración de variables.", e: "const id = 1;\nlet nombre = 'Lobo';" },
-            { t: "querySelector", d: "Seleccionar por CSS.", e: "const el = document.querySelector('.clase');" },
-            { t: "addEventListener", d: "Manejar eventos.", e: "el.addEventListener('click', (e) => {\n  console.log('Click!');\n});" },
-            { t: "fetch", d: "Consumo de API.", e: "fetch(url)\n  .then(res => res.json())\n  .then(data => console.log(data));" },
-            { t: "async / await", d: "Asincronía moderna.", e: "async function getData() {\n  const res = await fetch(url);\n  const data = await res.json();\n}" },
-            { t: "localStorage", d: "Persistencia de datos.", e: "localStorage.setItem('tema', 'dark');\nlet t = localStorage.getItem('tema');" },
-            { t: "classList", d: "Manipular clases.", e: "el.classList.add('active');\nel.classList.toggle('hidden');" },
-            { t: "map", d: "Transformar arrays.", e: "const doble = nums.map(n => n * 2);" },
-            { t: "filter", d: "Filtrar arrays.", e: "const pares = nums.filter(n => n % 2 === 0);" },
-            { t: "forEach", d: "Recorrer elementos.", e: "items.forEach(i => console.log(i));" },
-            { t: "JSON.stringify", d: "Objeto a Texto.", e: "const txt = JSON.stringify({id: 1});" },
-            { t: "setTimeout", d: "Ejecución diferida.", e: "setTimeout(() => {\n  alert('Time!');\n}, 2000);" },
-            { t: "setInterval", d: "Ejecución en bucle.", e: "setInterval(() => {\n  console.log('Tic');\n}, 1000);" },
-            { t: "Math.random", d: "Número aleatorio.", e: "const r = Math.floor(Math.random() * 100);" },
-            { t: "Array.from", d: "Crear array de objeto iterable.", e: "const divs = Array.from(document.querySelectorAll('div'));" },
-            { t: "try...catch", d: "Manejo de errores.", e: "try {\n  codigoPeligroso();\n} catch(err) {\n  console.error(err);\n}" }
-        ]
-    };
+            /* BÁSICOS Y LÓGICA */
+            { t: "const / let", d: "Variables de bloque (no suben al scope global).", e: "const ig = '@lobo';\nlet puntos = 100;" },
+            { t: "if / else / else if", d: "Control de flujo condicional.", e: "if(x > 0) { ... } else { ... }" },
+            { t: "Switch", d: "Evaluación de múltiples casos.", e: "switch(op) { case 1: ...; break; }" },
+            { t: "For / While", d: "Bucles de repetición clásicos.", e: "for(let i=0; i<10; i++) { ... }" },
+            { t: "for...of / for...in", d: "Iterar arrays u objetos.", e: "for(let x of array) { ... }" },
+            { t: "Try / Catch / Finally", d: "Gestión de errores y excepciones.", e: "try { ... } catch(e) { ... } finally { ... }" },
+            { t: "Arrow Functions", d: "Funciones cortas con 'this' léxico.", e: "const suma = (a, b) => a + b;" },
+        
+            /* MANIPULACIÓN DE ARRAYS (EL CORAZÓN) */
+            { t: "map()", d: "Transforma cada elemento y devuelve nuevo array.", e: "const m = arr.map(x => x * 2);" },
+            { t: "filter()", d: "Filtra elementos bajo una condición.", e: "const f = arr.filter(x => x > 10);" },
+            { t: "reduce()", d: "Reduce el array a un solo valor.", e: "const sum = arr.reduce((a, b) => a + b, 0);" },
+            { t: "forEach()", d: "Ejecuta una función por cada elemento.", e: "arr.forEach(el => console.log(el));" },
+            { t: "find() / findIndex()", d: "Busca el primer elemento o su índice.", e: "const item = arr.find(x => x.id === 1);" },
+            { t: "includes() / some() / every()", d: "Comprobaciones lógicas en arrays.", e: "const hay = arr.some(x => x < 0);" },
+            { t: "splice() / slice()", d: "Cortar o modificar partes del array.", e: "arr.splice(inicio, cantidad);" },
+            { t: "sort() / reverse()", d: "Ordenar y dar vuelta al array.", e: "arr.sort((a, b) => a - b);" },
+        
+            /* DOM Y EVENTOS */
+            { t: "querySelector / All", d: "Selección potente tipo CSS.", e: "const el = document.querySelector('.wiki');" },
+            { t: "addEventListener", d: "Escuchar eventos (click, input, submit).", e: "el.on('click', () => { ... });" },
+            { t: "classList (add, remove, toggle)", d: "Manipular clases CSS con JS.", e: "el.classList.toggle('active');" },
+            { t: "createElement / append", d: "Crear e inyectar nodos al DOM.", e: "const p = document.createElement('p');" },
+            { t: "dataset", d: "Acceder a atributos data-* de HTML.", e: "console.log(el.dataset.id);" },
+        
+            /* ASINCRONÍA Y RED */
+            { t: "Fetch API", d: "Peticiones HTTP (GET, POST, etc).", e: "fetch(url).then(r => r.json());" },
+            { t: "Async / Await", d: "Azúcar sintáctico para promesas.", e: "async function data() { await fetch(); }" },
+            { t: "Promise.all()", d: "Ejecutar múltiples promesas en paralelo.", e: "await Promise.all([p1, p2]);" },
+        
+            /* OBJETOS Y STRINGS */
+            { t: "Destructuring", d: "Extraer valores de forma masiva.", e: "const { name, age } = user;" },
+            { t: "Spread Operator (...)", d: "Clonación y expansión de datos.", e: "const nuevo = { ...viejo, id: 1 };" },
+            { t: "Template Literals", d: "Strings multilínea con variables.", e: "const s = `Hola ${user}`; " },
+            { t: "Object.keys / values / entries", d: "Reflexión de objetos.", e: "const keys = Object.keys(miObj);" },
+            { t: "JSON.parse / stringify", d: "Conversión a texto o objeto.", e: "const txt = JSON.stringify(obj);" },
+        
+            /* WEB APIS (PODER EXTRA) */
+            { t: "LocalStorage / Session", d: "Guardar datos en el navegador.", e: "localStorage.setItem('k', 'v');" },
+            { t: "Clipboard API", d: "Copiar al portapapeles del usuario.", e: "navigator.clipboard.writeText('Hola');" },
+            { t: "URLSearchParams", d: "Manipular parámetros de la URL.", e: "const p = new URLSearchParams(location.search);" },
+            { t: "Intersection Observer", d: "Detectar si un elemento es visible.", e: "new IntersectionObserver(callback);" },
+            { t: "setTimeout / setInterval", d: "Control del tiempo.", e: "setTimeout(() => { ... }, 1000);" }
+        ],
 
     function render() {
         const createGrid = (id, list, type) => {

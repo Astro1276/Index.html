@@ -114,27 +114,82 @@
             { t: "dialog", d: "Cuadro de diálogo (Modal).", e: "<dialog open>\n  Es un modal nativo\n</dialog>" }
         ],
         css: [
-            { t: "display", d: "Tipo de visualización.", e: "div {\n  display: flex | grid | block;\n}" },
-            { t: "flex-direction", d: "Eje principal de flex.", e: "div {\n  flex-direction: column;\n}" },
-            { t: "justify-content", d: "Alineación eje X.", e: "div {\n  justify-content: center;\n}" },
-            { t: "align-items", d: "Alineación eje Y.", e: "div {\n  align-items: center;\n}" },
-            { t: "grid-template-columns", d: "Columnas en Grid.", e: "div {\n  grid-template-columns: 1fr 2fr;\n}" },
-            { t: "gap", d: "Espacio entre elementos.", e: "div {\n  gap: 20px;\n}" },
-            { t: "position", d: "Método de posicionamiento.", e: "div {\n  position: absolute | relative | fixed | sticky;\n}" },
-            { t: "z-index", d: "Orden de capas (profundidad).", e: "div {\n  z-index: 10;\n}" },
-            { t: "background-image", d: "Imagen de fondo.", e: "div {\n  background-image: url('f.png');\n}" },
-            { t: "box-shadow", d: "Sombra del elemento.", e: "div {\n  box-shadow: 0 4px 10px rgba(0,0,0,0.5);\n}" },
-            { t: "border-radius", d: "Esquinas redondeadas.", e: "div {\n  border-radius: 50%;\n}" },
-            { t: "transition", d: "Animación de cambios.", e: "div {\n  transition: all 0.3s ease;\n}" },
-            { t: "transform", d: "Modificar forma/lugar.", e: "div {\n  transform: scale(1.1) rotate(5deg);\n}" },
-            { t: "animation", d: "Keyframes personalizados.", e: "@keyframes f {\n  to { opacity: 0; }\n}\ndiv { animation: f 2s; }" },
-            { t: "opacity", d: "Nivel de transparencia.", e: "div {\n  opacity: 0.5;\n}" },
-            { t: "backdrop-filter", d: "Efecto blur en fondo.", e: "div {\n  backdrop-filter: blur(10px);\n}" },
-            { t: "aspect-ratio", d: "Relación de aspecto.", e: "div {\n  aspect-ratio: 16 / 9;\n}" },
-            { t: "user-select", d: "Controlar selección de texto.", e: "div {\n  user-select: none;\n}" },
-            { t: "overflow", d: "Control de contenido extra.", e: "div {\n  overflow: hidden | scroll | auto;\n}" },
-            { t: "cursor", d: "Estilo del puntero.", e: "div {\n  cursor: pointer | grab | help;\n}" }
+            /* MODELO DE CAJA (BOX MODEL) */
+            { t: "width / height", d: "Ancho y alto del elemento.", e: "div {\n  width: 100px;\n  height: 50vh;\n}" },
+            { t: "margin", d: "Espacio exterior del elemento.", e: "div {\n  margin: 10px 20px;\n}" },
+            { t: "padding", d: "Espacio interior (relleno).", e: "div {\n  padding: 15px;\n}" },
+            { t: "border", d: "Borde: grosor, estilo y color.", e: "div {\n  border: 2px solid #fff;\n}" },
+            { t: "box-sizing", d: "Cómo se calcula el tamaño total.", e: "div {\n  box-sizing: border-box;\n}" },
+            { t: "outline", d: "Línea por fuera del borde.", e: "input {\n  outline: 2px dotted blue;\n}" },
+
+            /* POSICIONAMIENTO */
+            { t: "position", d: "Método de ubicación.", e: "div {\n  position: absolute | relative | fixed | sticky;\n}" },
+            { t: "top / right / bottom / left", d: "Coordenadas de posición.", e: "div {\n  top: 0;\n  left: 50%;\n}" },
+            { t: "z-index", d: "Orden de capas (profundidad).", e: "div {\n  z-index: 999;\n}" },
+            { t: "float / clear", d: "Flotar elementos y limpiar flujo.", e: "img {\n  float: left;\n  clear: both;\n}" },
+
+            /* DISPLAY & LAYOUT */
+            { t: "display", d: "Tipo de caja (block, inline, etc).", e: "span {\n  display: block;\n}" },
+            { t: "visibility", d: "Ocultar sin quitar el espacio.", e: "div {\n  visibility: hidden;\n}" },
+            { t: "aspect-ratio", d: "Relación de aspecto fija.", e: "video {\n  aspect-ratio: 16 / 9;\n}" },
+
+            /* FLEXBOX */
+            { t: "display: flex", d: "Contenedor flexible.", e: "nav {\n  display: flex;\n}" },
+            { t: "flex-direction", d: "Dirección de los hijos.", e: "nav {\n  flex-direction: column-reverse;\n}" },
+            { t: "justify-content", d: "Alineación eje principal (X).", e: "div {\n  justify-content: space-between;\n}" },
+            { t: "align-items", d: "Alineación eje secundario (Y).", e: "div {\n  align-items: baseline;\n}" },
+            { t: "flex-wrap", d: "Permitir saltos de línea.", e: "div {\n  flex-wrap: wrap;\n}" },
+            { t: "flex-grow / shrink", d: "Capacidad de crecer o encoger.", e: "div {\n  flex-grow: 1;\n}" },
+
+            /* GRID */
+            { t: "display: grid", d: "Contenedor de rejilla.", e: "main {\n  display: grid;\n}" },
+            { t: "grid-template-columns", d: "Definir columnas.", e: "main {\n  grid-template-columns: repeat(3, 1fr);\n}" },
+            { t: "gap", d: "Espacio entre celdas (Grid/Flex).", e: "div {\n  gap: 1rem;\n}" },
+            { t: "grid-area", d: "Asignar nombre a una celda.", e: "header {\n  grid-area: head;\n}" },
+
+            /* TIPOGRAFÍA */
+            { t: "font-family", d: "Tipo de fuente/letra.", e: "body {\n  font-family: 'Arial', sans-serif;\n}" },
+            { t: "font-size", d: "Tamaño de la fuente.", e: "p {\n  font-size: 1.2rem;\n}" },
+            { t: "font-weight", d: "Grosor de la letra.", e: "b {\n  font-weight: 800;\n}" },
+            { t: "line-height", d: "Espacio entre líneas.", e: "p {\n  line-height: 1.6;\n}" },
+            { t: "text-align", d: "Alineación horizontal.", e: "h1 {\n  text-align: center;\n}" },
+            { t: "text-decoration", d: "Subrayado, tachado, etc.", e: "a {\n  text-decoration: none;\n}" },
+            { t: "text-transform", d: "Mayúsculas / Minúsculas.", e: "span {\n  text-transform: uppercase;\n}" },
+            { t: "letter-spacing", d: "Espacio entre letras.", e: "h1 {\n  letter-spacing: 2px;\n}" },
+            { t: "white-space", d: "Manejo de espacios en blanco.", e: "pre {\n  white-space: nowrap;\n}" },
+
+            /* FONDOS Y COLORES */
+            { t: "color", d: "Color del texto.", e: "h1 {\n  color: salmon;\n}" },
+            { t: "background-color", d: "Color de fondo.", e: "div {\n  background-color: transparent;\n}" },
+            { t: "background-image", d: "Imagen de fondo.", e: "body {\n  background-image: url('f.jpg');\n}" },
+            { t: "background-size", d: "Tamaño de la imagen de fondo.", e: "body {\n  background-size: cover | contain;\n}" },
+            { t: "linear-gradient", d: "Fondo degradado.", e: "div {\n  background: linear-gradient(red, blue);\n}" },
+
+            /* ESTILOS VISUALES */
+            { t: "opacity", d: "Nivel de transparencia (0 a 1).", e: "img {\n  opacity: 0.7;\n}" },
+            { t: "border-radius", d: "Esquinas redondeadas.", e: "button {\n  border-radius: 12px;\n}" },
+            { t: "box-shadow", d: "Sombra exterior/interior.", e: "div {\n  box-shadow: 5px 5px 10px #000;\n}" },
+            { t: "text-shadow", d: "Sombra en el texto.", e: "h1 {\n  text-shadow: 2px 2px red;\n}" },
+            { t: "filter", d: "Efectos visuales (blur, sepia).", e: "img {\n  filter: grayscale(100%);\n}" },
+            { t: "backdrop-filter", d: "Filtro al fondo tras el elemento.", e: "header {\n  backdrop-filter: blur(5px);\n}" },
+            { t: "clip-path", d: "Recortar forma del elemento.", e: "div {\n  clip-path: circle(50%);\n}" },
+
+            /* ANIMACIONES Y TRANSFORMACIONES */
+            { t: "transition", d: "Suavizar cambios de propiedad.", e: "button {\n  transition: 0.3s ease-in-out;\n}" },
+            { t: "transform", d: "Mover, rotar o escalar.", e: "div {\n  transform: scale(1.2) rotate(45deg);\n}" },
+            { t: "animation", d: "Vincular @keyframes.", e: "div {\n  animation: saltar 2s infinite;\n}" },
+            { t: "@keyframes", d: "Definir pasos de una animación.", e: "@keyframes saltar {\n  0% { top: 0; }\n  100% { top: -20px; }\n}" },
+
+            /* INTERACTIVIDAD Y OTROS */
+            { t: "cursor", d: "Forma del puntero del ratón.", e: "div {\n  cursor: crosshair | pointer | wait;\n}" },
+            { t: "user-select", d: "Permitir o no seleccionar texto.", e: "p {\n  user-select: none;\n}" },
+            { t: "pointer-events", d: "Click traspasa el elemento.", e: "div {\n  pointer-events: none;\n}" },
+            { t: "scroll-behavior", d: "Desplazamiento suave.", e: "html {\n  scroll-behavior: smooth;\n}" },
+            { t: "accent-color", d: "Color de controles nativos.", e: "input {\n  accent-color: red;\n}" },
+            { t: "list-style", d: "Estilo de viñetas en listas.", e: "ul {\n  list-style: none;\n}" },
+            { t: "object-fit", d: "Cómo encaja una img/video.", e: "img {\n  object-fit: cover;\n}" }
         ],
+
         js: [
             { t: "const / let", d: "Declaración de variables.", e: "const id = 1;\nlet nombre = 'Lobo';" },
             { t: "querySelector", d: "Seleccionar por CSS.", e: "const el = document.querySelector('.clase');" },

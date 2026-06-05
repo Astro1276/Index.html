@@ -147,4 +147,4 @@ logoutBtn.addEventListener("click", () => {
     loadRanking();
 });
 
-loadRanking();
+//loadRanking();

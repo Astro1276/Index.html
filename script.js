@@ -25,10 +25,7 @@ const userDisplay = document.getElementById("user-display");
 const userRoleText = document.getElementById("user-role-text");
 const logoutBtn = document.getElementById("logout-btn");
 const adminStudentsTbody = document.getElementById("admin-students-tbody");
-const gradeHtml = document.getElementById("grade-html");
-const gradeCss = document.getElementById("grade-css");
-const gradeJs = document.getElementById("grade-js");
-const gradeAverage = document.getElementById("grade-average");
+const studentGrade = document.getElementById("student-grade");
 
 async function loadRanking() {
     topStudentsList.innerHTML = "";
@@ -36,20 +33,17 @@ async function loadRanking() {
     const students = [];
     querySnapshot.forEach((doc) => {
         const data = doc.data();
-        const html = parseFloat(data.html) || 1;
-        const css = parseFloat(data.css) || 1;
-        const js = parseFloat(data.js) || 1;
-        const avg = (html + css + js) / 3;
-        students.push({ id: doc.id, name: data.name || doc.id, avg: avg });
+        const grade = parseFloat(data.grade) || 1;
+        students.push({ id: doc.id, name: data.name || doc.id, grade: grade });
     });
-    students.sort((a, b) => b.avg - a.avg);
+    students.sort((a, b) => b.grade - a.grade);
     students.forEach((student, index) => {
         const li = document.createElement("li");
         let badgeClass = "";
         if (index === 0) badgeClass = "gold";
         else if (index === 1) badgeClass = "silver";
         else if (index === 2) badgeClass = "bronze";
-        li.innerHTML = `<span class="student-name">${student.name}</span><span class="student-badge ${badgeClass}">${student.avg.toFixed(1)}</span>`;
+        li.innerHTML = `<span class="student-name">${student.name}</span><span class="student-badge ${badgeClass}">${student.grade.toFixed(1)}</span>`;
         topStudentsList.appendChild(li);
     });
 }
@@ -61,29 +55,20 @@ async function loadAdminTable() {
         const data = documentSnapshot.data();
         const tr = document.createElement("tr");
         tr.innerHTML = `
-            <td>${data.name || documentSnapshot.id}</td>
-            <td><input type="number" class="input-table-grade html-grade" min="1" max="5" step="0.1" value="${data.html || 1}"></td>
-            <td><input type="number" class="input-table-grade css-grade" min="1" max="5" step="0.1" value="${data.css || 1}"></td>
-            <td><input type="number" class="input-table-grade js-grade" min="1" max="5" step="0.1" value="${data.js || 1}"></td>
+            <td>${data.name || "Sin nombre"}</td>
+            <td>${documentSnapshot.id}</td>
+            <td><input type="number" class="input-table-grade global-grade" min="1" max="5" step="0.1" value="${data.grade || 1}"></td>
             <td><button class="btn-save">Guardar</button></td>
         `;
         const saveBtn = tr.querySelector(".btn-save");
         saveBtn.addEventListener("click", async () => {
-            let htmlVal = parseFloat(tr.querySelector(".html-grade").value);
-            let cssVal = parseFloat(tr.querySelector(".css-grade").value);
-            let jsVal = parseFloat(tr.querySelector(".js-grade").value);
-            if (htmlVal < 1) htmlVal = 1;
-            if (htmlVal > 5) htmlVal = 5;
-            if (cssVal < 1) cssVal = 1;
-            if (cssVal > 5) cssVal = 5;
-            if (jsVal < 1) jsVal = 1;
-            if (jsVal > 5) jsVal = 5;
+            let gradeVal = parseFloat(tr.querySelector(".global-grade").value);
+            if (gradeVal < 1) gradeVal = 1;
+            if (gradeVal > 5) gradeVal = 5;
             await updateDoc(doc(db, "students", documentSnapshot.id), {
-                html: htmlVal,
-                css: cssVal,
-                js: jsVal
+                grade: gradeVal
             });
-            alert("Notas actualizadas");
+            alert("Nota actualizada");
             loadRanking();
         });
         adminStudentsTbody.appendChild(tr);
@@ -113,14 +98,8 @@ loginForm.addEventListener("submit", async (e) => {
             adminView.classList.add("hidden");
             userDisplay.textContent = data.name || user;
             userRoleText.textContent = "Rol: Estudiante";
-            const html = parseFloat(data.html) || 1;
-            const css = parseFloat(data.css) || 1;
-            const js = parseFloat(data.js) || 1;
-            const avg = (html + css + js) / 3;
-            gradeHtml.textContent = html.toFixed(1);
-            gradeCss.textContent = css.toFixed(1);
-            gradeJs.textContent = js.toFixed(1);
-            gradeAverage.textContent = avg.toFixed(1);
+            const grade = parseFloat(data.grade) || 1;
+            studentGrade.textContent = grade.toFixed(1);
         } else {
             alert("Credenciales incorrectas");
         }
@@ -135,4 +114,3 @@ logoutBtn.addEventListener("click", () => {
 });
 
 loadRanking();
-                       

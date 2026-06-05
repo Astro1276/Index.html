@@ -30,7 +30,7 @@ const studentGradesList = document.getElementById("student-grades-list");
 const studentAverage = document.getElementById("student-average");
 
 function calculateAverage(gradesArray) {
-    if (!gradesArray || gradesArray.length === 0) return 1.0;
+    if (!gradesArray || !Array.isArray(gradesArray) || gradesArray.length === 0) return 1.0;
     const sum = gradesArray.reduce((acc, curr) => acc + curr, 0);
     return sum / gradesArray.length;
 }
@@ -148,4 +148,3 @@ logoutBtn.addEventListener("click", () => {
 });
 
 loadRanking();
-                           

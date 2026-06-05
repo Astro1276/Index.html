@@ -47,18 +47,22 @@
         </header>
 
         <section id="student-view" class="card hidden">
-            <h2>Mi Calificación</h2>
+            <h2>Mi Historial de Calificaciones</h2>
             <div class="grades-grid">
+                <div class="grade-box">
+                    <span class="grade-label">Todas mis Notas</span>
+                    <span id="student-grades-list" class="grade-text-list">-</span>
+                </div>
                 <div class="grade-box total">
-                    <span class="grade-label">Nota Global</span>
-                    <span id="student-grade" class="grade-value">-.-</span>
+                    <span class="grade-label">Promedio General</span>
+                    <span id="student-average" class="grade-value">-.-</span>
                 </div>
             </div>
         </section>
 
         <section id="admin-view" class="card hidden">
             <h2>Panel de Administración (Profesor)</h2>
-            <p class="subtitle">Modifica la nota global de los estudiantes. Rango permitido: 1.0 a 5.0.</p>
+            <p class="subtitle">Añade nuevas notas al historial del estudiante. Rango permitido: 1.0 a 5.0.</p>
             
             <div class="table-responsive">
                 <table class="admin-table">
@@ -66,7 +70,9 @@
                         <tr>
                             <th>Nombre</th>
                             <th>Código</th>
-                            <th>Nota Global</th>
+                            <th>Historial Actual</th>
+                            <th>Promedio</th>
+                            <th>Nueva Nota</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>

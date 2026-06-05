@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, doc, getDoc, getDocs, collection, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc, getDoc, getDocs, collection, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyC5mkT_JX0bGE0Ves_aY1ivRI3vdQuY7s4",
@@ -11,9 +11,13 @@ const firebaseConfig = {
     measurementId: "G-9BCWCKKT2M"
 };
 
-// Inicialización limpia
+// Inicialización avanzada con caché local activa para evitar el bloqueo "offline"
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const db = initializeFirestore(app, {
+    localCache: persistentLocalCache({
+        tabManager: persistentMultipleTabManager()
+    })
+});
 
 // Elementos del DOM
 const loginContainer = document.getElementById("login-container");
@@ -169,3 +173,4 @@ logoutBtn.addEventListener("click", () => {
 
 // Cargar Ranking Inicial
 loadRanking();
+                         

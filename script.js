@@ -37,7 +37,7 @@ function calculateAverage(gradesArray) {
 
 async function loadRanking() {
     topStudentsList.innerHTML = "";
-    const querySnapshot = await getDocs(collection(db, "students"));
+    const querySnapshot = await getDocs(collection(db, "students/2022182"));
     const students = [];
     querySnapshot.forEach((doc) => {
         const data = doc.data();

@@ -2,13 +2,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getFirestore, doc, getDoc, getDocs, collection, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
-    apiKey: "",
-    authDomain: "",
-    projectId: "",
-    storageBucket: "",
-    messagingSenderId: "",
-    appId: ""
-};
+    apiKey: "AIzaSyC5mkT_JX0bGE0Ves_aY1ivRI3vdQuY7s4",
+    authDomain: "notas-e1f61.firebaseapp.com",
+    projectId: "notas-e1f61",
+    storageBucket: "notas-e1f61.firebasestorage.app",
+    messagingSenderId: "14068896226",
+    appId: "1:14068896226:web:009f9cc8c573dfa33469bb",
+    measurementId: "G-9BCWCKKT2M"
+}
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Notas - HTML, CSS & JS</title>
+    <title>Control de Notas</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -47,39 +47,26 @@
         </header>
 
         <section id="student-view" class="card hidden">
-            <h2>Mis Calificaciones</h2>
+            <h2>Mi Calificación</h2>
             <div class="grades-grid">
-                <div class="grade-box">
-                    <span class="grade-label">HTML</span>
-                    <span id="grade-html" class="grade-value">-.-</span>
-                </div>
-                <div class="grade-box">
-                    <span class="grade-label">CSS</span>
-                    <span id="grade-css" class="grade-value">-.-</span>
-                </div>
-                <div class="grade-box">
-                    <span class="grade-label">JavaScript</span>
-                    <span id="grade-js" class="grade-value">-.-</span>
-                </div>
                 <div class="grade-box total">
-                    <span class="grade-label">Promedio Final</span>
-                    <span id="grade-average" class="grade-value">-.-</span>
+                    <span class="grade-label">Nota Global</span>
+                    <span id="student-grade" class="grade-value">-.-</span>
                 </div>
             </div>
         </section>
 
         <section id="admin-view" class="card hidden">
             <h2>Panel de Administración (Profesor)</h2>
-            <p class="subtitle">Modifica las notas de los estudiantes. Rango permitido: 1.0 a 5.0.</p>
+            <p class="subtitle">Modifica la nota global de los estudiantes. Rango permitido: 1.0 a 5.0.</p>
             
             <div class="table-responsive">
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th>Código/Estudiante</th>
-                            <th>HTML</th>
-                            <th>CSS</th>
-                            <th>JS</th>
+                            <th>Nombre</th>
+                            <th>Código</th>
+                            <th>Nota Global</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -90,5 +77,4 @@
     </div>
     <script type="module" src="script.js"></script>
 </body>
-                        </html>
-                        
+</html>

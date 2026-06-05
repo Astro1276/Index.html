@@ -11,7 +11,7 @@ const firebaseConfig = {
     measurementId: "G-9BCWCKKT2M"
 };
 
-// Inicialización segura
+// Inicialización limpia
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
@@ -69,7 +69,7 @@ async function loadAdminTable() {
         const querySnapshot = await getDocs(collection(db, "students"));
         
         if (querySnapshot.empty) {
-            adminStudentsTbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>No hay estudiantes registrados en Firebase.</td></tr>";
+            adminStudentsTbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>No hay estudiantes registrados.</td></tr>";
             return;
         }
 
@@ -106,7 +106,7 @@ async function loadAdminTable() {
             adminStudentsTbody.appendChild(tr);
         });
     } catch (error) {
-        adminStudentsTbody.innerHTML = `<tr><td colspan='6' style='color:red; text-align:center;'>Error al cargar datos: ${error.message}</td></tr>`;
+        adminStudentsTbody.innerHTML = `<tr><td colspan='6' style='color:red; text-align:center;'>Error: ${error.message}</td></tr>`;
     }
 }
 
@@ -115,7 +115,7 @@ loginForm.addEventListener("submit", async (e) => {
     const user = usernameInput.value.trim();
     const pass = passwordInput.value.trim();
 
-    // 1. LOGIN DE PROFESOR (Entra directo sin importar Firebase)
+    // 1. LOGIN DE PROFESOR
     if (user === "admin" && pass === "1276") {
         loginContainer.classList.add("hidden");
         dashboardContainer.classList.remove("hidden");
@@ -127,24 +127,23 @@ loginForm.addEventListener("submit", async (e) => {
         return; 
     } 
 
-    // 2. LOGIN DE ESTUDIANTES (Consulta directa)
+    // 2. LOGIN DE ESTUDIANTES
     try {
         const docRef = doc(db, "students", user);
         const docSnap = await getDoc(docRef);
 
         if (!docSnap.exists()) {
-            alert("El código de estudiante '" + user + "' no existe en la base de datos.");
+            alert("El código '" + user + "' no existe en la base de datos.");
             return;
         }
 
         const data = docSnap.data();
         
         if (data.password !== pass) {
-            alert("Contraseña incorrecta para el estudiante.");
+            alert("Contraseña incorrecta.");
             return;
         }
 
-        // Si todo coincide, dar acceso
         loginContainer.classList.add("hidden");
         dashboardContainer.classList.remove("hidden");
         studentView.classList.remove("hidden");

@@ -11,9 +11,11 @@ const firebaseConfig = {
     measurementId: "G-9BCWCKKT2M"
 };
 
+// Inicialización segura
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Elementos del DOM
 const loginContainer = document.getElementById("login-container");
 const dashboardContainer = document.getElementById("dashboard-container");
 const studentView = document.getElementById("student-view");
@@ -57,7 +59,7 @@ async function loadRanking() {
             topStudentsList.appendChild(li);
         });
     } catch (error) {
-        console.error("Error cargando el ranking: ", error);
+        console.error("Error en ranking: ", error);
     }
 }
 
@@ -65,6 +67,12 @@ async function loadAdminTable() {
     try {
         adminStudentsTbody.innerHTML = "";
         const querySnapshot = await getDocs(collection(db, "students"));
+        
+        if (querySnapshot.empty) {
+            adminStudentsTbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>No hay estudiantes registrados en Firebase.</td></tr>";
+            return;
+        }
+
         querySnapshot.forEach((documentSnapshot) => {
             const data = documentSnapshot.data();
             const grades = data.grades || [];
@@ -91,21 +99,23 @@ async function loadAdminTable() {
                 await updateDoc(doc(db, "students", documentSnapshot.id), {
                     grades: arrayUnion(newGrade)
                 });
-                alert("Nueva nota añadida al historial");
+                alert("Nueva nota añadida");
                 await loadAdminTable();
                 loadRanking();
             });
             adminStudentsTbody.appendChild(tr);
         });
     } catch (error) {
-        console.error("Error cargando la tabla de administración: ", error);
+        adminStudentsTbody.innerHTML = `<tr><td colspan='6' style='color:red; text-align:center;'>Error al cargar datos: ${error.message}</td></tr>`;
     }
 }
 
 loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const user = usernameInput.value;
-    const pass = passwordInput.value;
+    const user = usernameInput.value.trim();
+    const pass = passwordInput.value.trim();
+
+    // 1. LOGIN DE PROFESOR (Entra directo sin importar Firebase)
     if (user === "admin" && pass === "1276") {
         loginContainer.classList.add("hidden");
         dashboardContainer.classList.remove("hidden");
@@ -114,29 +124,40 @@ loginForm.addEventListener("submit", async (e) => {
         userDisplay.textContent = "Administrador";
         userRoleText.textContent = "Rol: Profesor";
         await loadAdminTable();
-    } else {
-        try {
-            const docRef = doc(db, "students", user);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists() && docSnap.data().password === pass) {
-                const data = docSnap.data();
-                loginContainer.classList.add("hidden");
-                dashboardContainer.classList.remove("hidden");
-                studentView.classList.remove("hidden");
-                adminView.classList.add("hidden");
-                userDisplay.textContent = data.name || user;
-                userRoleText.textContent = "Rol: Estudiante";
-                const grades = data.grades || [];
-                const avg = calculateAverage(grades);
-                studentGradesList.textContent = grades.length > 0 ? grades.join(" , ") : "No tienes notas registradas";
-                studentAverage.textContent = avg.toFixed(1);
-            } else {
-                alert("Credenciales incorrectas");
-            }
-        } catch (error) {
-            console.error("Error al iniciar sesión: ", error);
-            alert("Hubo un error al conectar con la base de datos.");
+        return; 
+    } 
+
+    // 2. LOGIN DE ESTUDIANTES (Consulta directa)
+    try {
+        const docRef = doc(db, "students", user);
+        const docSnap = await getDoc(docRef);
+
+        if (!docSnap.exists()) {
+            alert("El código de estudiante '" + user + "' no existe en la base de datos.");
+            return;
         }
+
+        const data = docSnap.data();
+        
+        if (data.password !== pass) {
+            alert("Contraseña incorrecta para el estudiante.");
+            return;
+        }
+
+        // Si todo coincide, dar acceso
+        loginContainer.classList.add("hidden");
+        dashboardContainer.classList.remove("hidden");
+        studentView.classList.remove("hidden");
+        adminView.classList.add("hidden");
+        userDisplay.textContent = data.name || user;
+        userRoleText.textContent = "Rol: Estudiante";
+        const grades = data.grades || [];
+        const avg = calculateAverage(grades);
+        studentGradesList.textContent = grades.length > 0 ? grades.join(" , ") : "No tienes notas registradas";
+        studentAverage.textContent = avg.toFixed(1);
+
+    } catch (error) {
+        alert("Error de conexión de Firebase: " + error.message);
     }
 });
 
@@ -147,4 +168,5 @@ logoutBtn.addEventListener("click", () => {
     loadRanking();
 });
 
-//loadRanking();
+// Cargar Ranking Inicial
+loadRanking();

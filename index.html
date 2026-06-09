@@ -19,7 +19,7 @@
             align-items: center;
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden; /* Evita que la pantalla se mueva en el cel */
+            overflow: hidden; 
             color: white;
             position: relative;
         }
@@ -31,7 +31,7 @@
             height: 160px;
             cursor: pointer;
             transition: transform 0.3s ease;
-            z-index: 10; /* Detrás del mensaje final */
+            z-index: 10;
         }
 
         /* La Caja (Cuerpo) */
@@ -100,15 +100,14 @@
         }
 
         .photo {
-            position: fixed; /* Se posiciona relativo a la pantalla completa */
-            width: 110px; /* Tamaño optimizado para celular */
+            position: fixed; 
+            width: 110px; 
             height: 130px;
             background: white;
             padding: 6px;
             padding-bottom: 20px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.4);
             border-radius: 2px;
-            /* Inician exactamente en el centro de la caja de regalo */
             left: calc(50vw - 55px);
             top: calc(50vh - 65px);
             opacity: 0;
@@ -133,16 +132,16 @@
             pointer-events: auto;
         }
 
-        /* --- CONTENEDOR DEL TEXTO (POR ENCIMA DE TODO) --- */
+        /* --- CONTENEDOR DEL TEXTO --- */
         .message-container {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            z-index: 999; /* Asegura que se pinte encima de las fotos */
+            z-index: 999; 
             width: 85%;
-            pointer-events: none; /* No bloquea si quieren tocar las fotos de fondo */
+            pointer-events: none; 
         }
 
         .message {
@@ -151,7 +150,7 @@
             text-shadow: 0px 0px 10px rgba(0,0,0,0.9), 2px 2px 5px rgba(0,0,0,1);
             display: inline-block;
             white-space: pre-line;
-            background: rgba(26, 26, 26, 0.4); /* Fondo sutil para leer mejor sobre las fotos */
+            background: rgba(26, 26, 26, 0.4); 
             padding: 10px;
             border-radius: 10px;
         }
@@ -209,30 +208,30 @@
             if (yaAbierto) return; 
             yaAbierto = true;
 
+            // Abre la tapa inmediatamente al tocar
             giftBox.classList.add('open');
 
             const fotos = document.querySelectorAll('.photo');
-            
-            // Dimensiones de la pantalla del teléfono
             const widthPantalla = window.innerWidth;
             const heightPantalla = window.innerHeight;
 
-            fotos.forEach((foto, index) => {
-                setTimeout(() => {
-                    // Ponemos límites estrictos para que se queden dentro de la pantalla visible del cel
-                    // Ancho foto: 110px, Alto foto: 130px. Dejamos márgenes de seguridad.
-                    const randomX = Math.floor(Math.random() * (widthPantalla - 130)) + 10;
-                    const randomY = Math.floor(Math.random() * (heightPantalla - 160)) + 10;
-                    const randomRot = Math.floor(Math.random() * 30) - 15; // Inclinación leve
+            // BREVE DELAY INICIAL: Espera 500ms (medio segundo) después de abrir la tapa para lanzar las fotos
+            setTimeout(() => {
+                fotos.forEach((foto, index) => {
+                    setTimeout(() => {
+                        const randomX = Math.floor(Math.random() * (widthPantalla - 130)) + 10;
+                        const randomY = Math.floor(Math.random() * (heightPantalla - 160)) + 10;
+                        const randomRot = Math.floor(Math.random() * 30) - 15; 
 
-                    foto.style.left = `${randomX}px`;
-                    foto.style.top = `${randomY}px`;
-                    foto.style.transform = `scale(1) rotate(${randomRot}deg)`;
-                    foto.style.zIndex = index + 1;
-                }, index * 200); // Salen fluido uno tras otro
-            });
+                        foto.style.left = `${randomX}px`;
+                        foto.style.top = `${randomY}px`;
+                        foto.style.transform = `scale(1) rotate(${randomRot}deg)`;
+                        foto.style.zIndex = index + 1;
+                    }, index * 200); // Espaciado entre cada foto
+                });
+            }, 500); 
 
-            // Máquina de escribir inicia un momento después de esparcirse
+            // El texto inicia después de que se abra la tapa, el delay inicial y salgan todas las fotos
             setTimeout(() => {
                 let i = 0;
                 function escribir() {
@@ -243,7 +242,7 @@
                     }
                 }
                 escribir();
-            }, fotos.length * 200 + 400);
+            }, 500 + (fotos.length * 200) + 300);
         });
     </script>
 

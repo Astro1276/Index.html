@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Sorpresa!</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* Contenedor del Regalo */
+        .gift-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+            transition: transform 0.5s ease;
+            z-index: 10;
+        }
+
+        .gift-container:hover {
+            transform: scale(1.05);
+        }
+
+        /* La Caja (Cuerpo) */
+        .box-body {
+            position: absolute;
+            bottom: 0;
+            width: 200px;
+            height: 160px;
+            background: #ff4757;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        /* Cinta Vertical de la Caja */
+        .box-body::after, .box-lid::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 100%;
+            background: #ffa502;
+        }
+
+        /* La Tapa */
+        .box-lid {
+            position: absolute;
+            top: 15px;
+            left: -5px;
+            width: 210px;
+            height: 40px;
+            background: #ff6b81;
+            border-radius: 4px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+            z-index: 2;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            transform-origin: left top;
+        }
+
+        /* El Lazo/Moño de la tapa */
+        .box-bow {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 20px;
+            background: #ffa502;
+            border-radius: 50% 50% 0 0;
+        }
+
+        /* --- CONTENIDO SORPRESA (FOTOS Y MENSAJE) --- */
+        .surprise-content {
+            position: absolute;
+            bottom: 40px; /* Sale desde dentro de la caja */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+            z-index: 1;
+        }
+
+        /* Formato de las Fotos estilo Polaroid */
+        .photo {
+            width: 160px;
+            height: 180px;
+            background: white;
+            padding: 10px;
+            padding-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            border-radius: 2px;
+            margin-bottom: -140px; /* Estarán solapadas al inicio */
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), margin 0.5s ease;
+            transform: scale(0.3) rotate(0deg);
+        }
+
+        .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 1px solid #ddd;
+        }
+
+        /* Mensaje de texto */
+        .message {
+            margin-top: 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease 1.5s; /* Aparece de último */
+            width: 280px;
+        }
+
+        /* --- ESTADOS ACTIVOS (CUANDO SE ABRE) --- */
+        .gift-container.open .box-lid {
+            transform: rotate(-110deg) translateY(-20px);
+            opacity: 0.9;
+        }
+
+        .gift-container.open .surprise-content {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Animación en orden para cada foto */
+        .gift-container.open .photo-1 {
+            transform: scale(1) translateY(-180px) rotate(-5deg);
+            z-index: 3;
+        }
+
+        .gift-container.open .photo-2 {
+            transform: scale(1) translateY(-100px) rotate(5deg);
+            z-index: 4;
+            transition-delay: 0.4s; /* Sale después */
+        }
+
+        .gift-container.open .photo-3 {
+            transform: scale(1) translateY(-20px) rotate(-3deg);
+            z-index: 5;
+            transition-delay: 0.8s; /* Sale de última */
+        }
+
+        .gift-container.open .message {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="gift-container" id="giftBox">
+        <div class="box-lid">
+            <div class="box-bow"></div>
+        </div>
+        <div class="box-body"></div>
+        
+        <div class="surprise-content">
+            <div class="photo photo-1">
+                <img src="https://via.placeholder.com/150/FF0000/FFFFFF?text=Foto+1" alt="Foto 1">
+            </div>
+            <div class="photo photo-2">
+                <img src="https://via.placeholder.com/150/00FF00/FFFFFF?text=Foto+2" alt="Foto 2">
+            </div>
+            <div class="photo photo-3">
+                <img src="https://via.placeholder.com/150/0000FF/FFFFFF?text=Foto+3" alt="Foto 3">
+            </div>
+
+            <div class="message">
+                ¡Feliz Cumpleaños, Loco! 💀🔥<br>
+                Que la pases brutal hoy.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JS sencillo para activar las animaciones al dar clic
+        const giftBox = document.getElementById('giftBox');
+        
+        giftBox.addEventListener('click', () => {
+            giftBox.classList.toggle('open');
+        });
+    </script>
+
+</body>
+              </html>
+              

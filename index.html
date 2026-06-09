@@ -19,31 +19,27 @@
             align-items: center;
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
+            overflow: hidden; /* Evita que la pantalla se mueva en el cel */
             color: white;
-            perspective: 1000px;
+            position: relative;
         }
 
         /* Contenedor del Regalo */
         .gift-container {
             position: relative;
-            width: 200px;
-            height: 200px;
+            width: 160px;
+            height: 160px;
             cursor: pointer;
             transition: transform 0.3s ease;
-            z-index: 100;
-        }
-
-        .gift-container:hover {
-            transform: scale(1.05);
+            z-index: 10; /* Detrás del mensaje final */
         }
 
         /* La Caja (Cuerpo) */
         .box-body {
             position: absolute;
             bottom: 0;
-            width: 200px;
-            height: 160px;
+            width: 160px;
+            height: 130px;
             background: #ff4757;
             border-bottom-left-radius: 8px;
             border-bottom-right-radius: 8px;
@@ -56,7 +52,7 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            width: 40px;
+            width: 30px;
             height: 100%;
             background: #ffa502;
         }
@@ -64,10 +60,10 @@
         /* La Tapa */
         .box-lid {
             position: absolute;
-            top: 15px;
+            top: 10px;
             left: -5px;
-            width: 210px;
-            height: 40px;
+            width: 170px;
+            height: 35px;
             background: #ff6b81;
             border-radius: 4px;
             box-shadow: 0 5px 10px rgba(0,0,0,0.3);
@@ -79,18 +75,18 @@
         /* El Lazo */
         .box-bow {
             position: absolute;
-            top: -20px;
+            top: -15px;
             left: 50%;
             transform: translateX(-50%);
-            width: 50px;
-            height: 20px;
+            width: 40px;
+            height: 15px;
             background: #ffa502;
             border-radius: 50% 50% 0 0;
         }
 
         /* --- ESTADO ABIERTO (TAPA) --- */
         .gift-container.open .box-lid {
-            transform: rotate(-120deg) translateY(-30px);
+            transform: rotate(-120deg) translateY(-20px);
         }
 
         /* --- CONTENIDO DE FOTOS --- */
@@ -100,27 +96,28 @@
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* No estorba al clic de la caja inicialmente */
+            pointer-events: none;
         }
 
         .photo {
-            position: absolute;
-            width: 140px;
-            height: 160px;
+            position: fixed; /* Se posiciona relativo a la pantalla completa */
+            width: 110px; /* Tamaño optimizado para celular */
+            height: 130px;
             background: white;
-            padding: 8px;
-            padding-bottom: 24px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            padding: 6px;
+            padding-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
             border-radius: 2px;
-            left: 30px;
-            top: 20px;
+            /* Inician exactamente en el centro de la caja de regalo */
+            left: calc(50vw - 55px);
+            top: calc(50vh - 65px);
             opacity: 0;
-            transform: scale(0.2);
+            transform: scale(0.1);
             transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1), 
                         top 1s cubic-bezier(0.25, 1, 0.5, 1), 
                         left 1s cubic-bezier(0.25, 1, 0.5, 1), 
-                        opacity 0.5s ease;
-            z-index: 10;
+                        opacity 0.4s ease;
+            z-index: 5;
         }
 
         .photo img {
@@ -130,37 +127,43 @@
             border: 1px solid #ddd;
         }
 
-        /* Cuando la caja se abre, las fotos se vuelven interactivas */
+        /* Cuando la caja se abre */
         .gift-container.open .photo {
             opacity: 1;
             pointer-events: auto;
         }
 
-        /* --- CONTENEDOR DEL TEXTO --- */
+        /* --- CONTENEDOR DEL TEXTO (POR ENCIMA DE TODO) --- */
         .message-container {
-            position: absolute;
-            bottom: 40px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
-            z-index: 10;
-            width: 90%;
-            max-width: 400px;
-            pointer-events: none;
+            z-index: 999; /* Asegura que se pinte encima de las fotos */
+            width: 85%;
+            pointer-events: none; /* No bloquea si quieren tocar las fotos de fondo */
         }
 
         .message {
             font-size: 1.8rem;
             font-weight: bold;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.85);
+            text-shadow: 0px 0px 10px rgba(0,0,0,0.9), 2px 2px 5px rgba(0,0,0,1);
             display: inline-block;
-            white-space: pre-line; /* Mantiene los saltos de línea */
+            white-space: pre-line;
+            background: rgba(26, 26, 26, 0.4); /* Fondo sutil para leer mejor sobre las fotos */
+            padding: 10px;
+            border-radius: 10px;
         }
 
-        /* Cursor parpadeante de la máquina de escribir */
+        /* Cursor de la máquina */
         .cursor {
             display: inline-block;
             width: 10px;
+            height: 1.8rem;
             background-color: #ffa502;
             margin-left: 5px;
+            vertical-align: middle;
             animation: blink 0.6s infinite;
         }
 
@@ -179,13 +182,13 @@
         <div class="box-body"></div>
         
         <div class="photo-container">
-            <div class="photo" id="p1"><img src="https://via.placeholder.com/150/FF0000/FFFFFF?text=Foto+1" alt="1"></div>
-            <div class="photo" id="p2"><img src="https://via.placeholder.com/150/00FF00/FFFFFF?text=Foto+2" alt="2"></div>
-            <div class="photo" id="p3"><img src="https://via.placeholder.com/150/0000FF/FFFFFF?text=Foto+3" alt="3"></div>
-            <div class="photo" id="p4"><img src="https://via.placeholder.com/150/FFFF00/FFFFFF?text=Foto+4" alt="4"></div>
-            <div class="photo" id="p5"><img src="https://via.placeholder.com/150/FF00FF/FFFFFF?text=Foto+5" alt="5"></div>
-            <div class="photo" id="p6"><img src="https://via.placeholder.com/150/00FFFF/FFFFFF?text=Foto+6" alt="6"></div>
-            <div class="photo" id="p7"><img src="https://via.placeholder.com/150/FFA500/FFFFFF?text=Foto+7" alt="7"></div>
+            <div class="photo"><img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=300" alt="1"></div>
+            <div class="photo"><img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?w=300" alt="2"></div>
+            <div class="photo"><img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=300" alt="3"></div>
+            <div class="photo"><img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=300" alt="4"></div>
+            <div class="photo"><img src="https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?w=300" alt="5"></div>
+            <div class="photo"><img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=300" alt="6"></div>
+            <div class="photo"><img src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=300" alt="7"></div>
         </div>
     </div>
 
@@ -198,55 +201,51 @@
         const textElement = document.getElementById('typewriter');
         const cursor = document.getElementById('cursor');
 
-        // Texto que se va a escribir solo (Usa \n para saltos de línea)
-        const textoSorpresa = "¡Feliz Cumpleaños, Loco! 💀🔥\nQue la pases criminal hoy.\n¡Disfruta tu día al máximo!";
+        const textoSorpresa = "¡Feliz Cumpleaños, Loco! 💀🔥\n\nQue la pases criminal hoy.\n¡Disfruta tu día al máximo!";
         
         let yaAbierto = false;
 
         giftBox.addEventListener('click', () => {
-            // Solo ejecuta la animación la primera vez que se toca
             if (yaAbierto) return; 
             yaAbierto = true;
 
             giftBox.classList.add('open');
 
-            // 1. Desordenar y regar las fotos por toda la pantalla
             const fotos = document.querySelectorAll('.photo');
             
-            fotos.forEach((foto, index) => {
-                // Cálculo para que salgan en orden escalonado (delay)
-                setTimeout(() => {
-                    // Genera posiciones aleatorias en la pantalla
-                    const randomX = Math.floor(Math.random() * (window.innerWidth - 160));
-                    const randomY = Math.floor(Math.random() * (window.innerHeight - 200));
-                    // Rotación aleatoria para el toque Polaroid
-                    const randomRot = Math.floor(Math.random() * 40) - 20; 
+            // Dimensiones de la pantalla del teléfono
+            const widthPantalla = window.innerWidth;
+            const heightPantalla = window.innerHeight;
 
-                    foto.style.top = `${randomY}px`;
+            fotos.forEach((foto, index) => {
+                setTimeout(() => {
+                    // Ponemos límites estrictos para que se queden dentro de la pantalla visible del cel
+                    // Ancho foto: 110px, Alto foto: 130px. Dejamos márgenes de seguridad.
+                    const randomX = Math.floor(Math.random() * (widthPantalla - 130)) + 10;
+                    const randomY = Math.floor(Math.random() * (heightPantalla - 160)) + 10;
+                    const randomRot = Math.floor(Math.random() * 30) - 15; // Inclinación leve
+
                     foto.style.left = `${randomX}px`;
+                    foto.style.top = `${randomY}px`;
                     foto.style.transform = `scale(1) rotate(${randomRot}deg)`;
                     foto.style.zIndex = index + 1;
-                }, index * 250); // Ajusta este número (250) si quieres que salgan más rápido o lento
+                }, index * 200); // Salen fluido uno tras otro
             });
 
-            // 2. Iniciar efecto máquina de escribir después de que salgan las fotos
+            // Máquina de escribir inicia un momento después de esparcirse
             setTimeout(() => {
                 let i = 0;
                 function escribir() {
                     if (i < textoSorpresa.length) {
                         textElement.textContent += textoSorpresa.charAt(i);
                         i++;
-                        setTimeout(escribir, 60); // Velocidad de escritura (en milisegundos)
-                    } else {
-                        // Deja el cursor fijo o puedes ocultarlo al terminar
-                        cursor.style.display = 'inline-block';
+                        setTimeout(escribir, 50); 
                     }
                 }
                 escribir();
-            }, fotos.length * 250 + 500); // Arranca justo al terminar las fotos
+            }, fotos.length * 200 + 400);
         });
     </script>
 
 </body>
-                </html>
-                
+</html>

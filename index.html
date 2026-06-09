@@ -174,6 +174,8 @@
 </head>
 <body>
 
+    <audio id="bgMusic" src="musica.mp3" loop></audio>
+
     <div class="gift-container" id="giftBox">
         <div class="box-lid">
             <div class="box-bow"></div>
@@ -181,15 +183,15 @@
         <div class="box-body"></div>
         
         <div class="photo-container">
-            <div class="photo"><img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=300" alt="1"></div>
-            <div class="photo"><img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?w=300" alt="2"></div>
-            <div class="photo"><img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=300" alt="3"></div>
-            <div class="photo"><img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=300" alt="4"></div>
-            <div class="photo"><img src="https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?w=300" alt="5"></div>
-            <div class="photo"><img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=300" alt="6"></div>
-            <div class="photo"><img src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=300" alt="7"></div>
-            <div class="photo"><img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=300" alt="8"></div>
-            <div class="photo"><img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=300" alt="9"></div>
+            <div class="photo"><img src="images.jpeg" alt="1"></div>
+            <div class="photo"><img src="images (1).jpeg" alt="2"></div>
+            <div class="photo"><img src="images (2).jpeg" alt="3"></div>
+            <div class="photo"><img src="images (3).jpeg" alt="4"></div>
+            <div class="photo"><img src="images (4).jpeg" alt="5"></div>
+            <div class="photo"><img src="images (5).jpeg" alt="6"></div>
+            <div class="photo"><img src="images (6).jpeg" alt="7"></div>
+            <div class="photo"><img src="images (7).jpeg" alt="8"></div>
+            <div class="photo"><img src="images (8).jpeg" alt="9"></div>
         </div>
     </div>
 
@@ -201,6 +203,7 @@
         const giftBox = document.getElementById('giftBox');
         const textElement = document.getElementById('typewriter');
         const cursor = document.getElementById('cursor');
+        const bgMusic = document.getElementById('bgMusic');
 
         const textoSorpresa = "¡Feliz Cumpleaños, Loco! 💀🔥\n\nQue la pases criminal hoy.\n¡Disfruta tu día al máximo!";
         
@@ -210,14 +213,19 @@
             if (yaAbierto) return; 
             yaAbierto = true;
 
-            // Abre la tapa inmediatamente al tocar
+            // REGLA DE NAVEGADORES: La música DEBE iniciar con una acción del usuario (el clic en la caja)
+            bgMusic.play().catch(error => {
+                console.log("El navegador bloqueó el audio automáticamente:", error);
+            });
+
+            // Abre la tapa
             giftBox.classList.add('open');
 
             const fotos = document.querySelectorAll('.photo');
             const widthPantalla = window.innerWidth;
             const heightPantalla = window.innerHeight;
 
-            // BREVE DELAY INICIAL: Espera 500ms (medio segundo) después de abrir la tapa para lanzar las fotos
+            // Delay para lanzar las fotos
             setTimeout(() => {
                 fotos.forEach((foto, index) => {
                     setTimeout(() => {
@@ -229,11 +237,11 @@
                         foto.style.top = `${randomY}px`;
                         foto.style.transform = `scale(1) rotate(${randomRot}deg)`;
                         foto.style.zIndex = index + 1;
-                    }, index * 200); // Espaciado entre cada foto
+                    }, index * 200);
                 });
             }, 500); 
 
-            // El texto inicia después de que se abra la tapa, el delay inicial y salgan todas las fotos
+            // Máquina de escribir
             setTimeout(() => {
                 let i = 0;
                 function escribir() {
